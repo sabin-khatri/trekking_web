@@ -1,16 +1,16 @@
 // src/components/Navbar.jsx
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom'; 
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
 
-  const location = useLocation(); 
+  const location = useLocation();
+
   useEffect(() => {
     const handleScroll = () => {
-      setHasScrolled(window.scrollY > 40);
+      setHasScrolled(window.scrollY > 30);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -27,111 +27,122 @@ export default function Navbar() {
   return (
     <nav
       className={`
-        fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-md
+        fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out
         ${hasScrolled 
-          ? 'bg-white/95 shadow-md' 
-          : 'bg-white/80'}
+          ? 'bg-white/95 backdrop-blur-lg shadow-xl py-2' 
+          : 'bg-white/80 backdrop-blur-md py-3'}
       `}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 sm:h-20 items-center justify-between">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
 
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <img
-              src="src/assets/img/logo.png"
-              alt="Nepal Treks Logo"
-              className="h-9 w-9 sm:h-10 sm:w-10 rounded-full object-cover bg-white p-1 shadow-sm 
-                         group-hover:rotate-[15deg] group-hover:scale-110 transition-transform duration-300"
-            />
-            <span className="
-              text-xl sm:text-2xl font-bold tracking-tight
-              bg-gradient-to-r from-green-600 via-green-500 to-green-400 
-              bg-clip-text text-transparent
-            ">
-              NepalTreks
-            </span>
+          {/* Logo - More Premium Look */}
+          <Link 
+            to="/" 
+            className="flex items-center gap-3 group"
+          >
+            <div className="relative">
+              <img
+                src="/src/assets/img/logo.png"   // Changed to /src (better practice)
+                alt="Nepal Treks Logo"
+                className="h-10 w-10 sm:h-11 sm:w-11 rounded-2xl object-cover shadow-md 
+                           ring-1 ring-white/50 transition-all duration-300 
+                           group-hover:scale-110 group-hover:-rotate-6"
+              />
+              {/* Subtle glow effect */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-green-400/20 to-transparent 
+                              opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+
+            <div>
+              <span className="text-2xl sm:text-3xl font-bold tracking-tighter
+                               bg-gradient-to-r from-green-700 via-emerald-600 to-green-500 
+                               bg-clip-text text-transparent">
+                NepalTreks
+              </span>
+              <p className="text-[10px] text-slate-500 -mt-1 tracking-[2px] font-medium">EXPLORE NEPAL</p>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8 lg:gap-10">
+          <div className="hidden md:flex items-center gap-10">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 to={item.path}
                 className={`
-                  relative font-medium text-slate-800 transition-colors
-                  hover:text-green-600
-                  ${location.pathname === item.path ? 'text-green-600 font-semibold' : ''}
+                  relative text-slate-700 font-medium text-[15px] transition-all duration-300
+                  hover:text-green-700 group
+                  ${location.pathname === item.path ? 'text-green-700' : ''}
                 `}
               >
                 {item.name}
+                {/* Underline Animation */}
                 <span
                   className={`
-                    absolute -bottom-1 left-0 h-0.5 w-full origin-left scale-x-0 
-                    bg-gradient-to-r from-green-600 to-green-400 
-                    transition-transform duration-300
-                    ${location.pathname === item.path ? 'scale-x-100' : 'group-hover:scale-x-100'}
+                    absolute -bottom-1.5 left-0 h-[2px] w-0 bg-gradient-to-r from-green-600 to-emerald-500 
+                    transition-all duration-300 group-hover:w-full
+                    ${location.pathname === item.path ? 'w-full' : ''}
                   `}
                 />
               </Link>
             ))}
 
-            {/* Contact Button */}
+            {/* Contact Button - Enhanced */}
             <Link
               to="/contact"
               className="
-                rounded-full bg-gradient-to-r from-green-600 to-green-800 
-                px-5 py-2.5 text-sm font-semibold text-white shadow-md
-                hover:from-green-700 hover:to-green-900 hover:shadow-lg 
-                hover:scale-105 active:scale-95 transition-all duration-200
+                ml-4 px-7 py-2.5 rounded-2xl font-semibold text-sm tracking-wide
+                bg-gradient-to-r from-green-600 to-emerald-700 text-white
+                shadow-lg shadow-green-600/30 
+                hover:shadow-xl hover:shadow-green-600/40 
+                hover:-translate-y-0.5 active:scale-95
+                transition-all duration-300
               "
             >
               Contact Us
             </Link>
           </div>
 
-          {/* Mobile Hamburger */}
+          {/* Mobile Hamburger - Better Design */}
           <button
-            className="md:hidden p-2 rounded-md text-slate-800 hover:bg-slate-100 transition-colors"
             onClick={() => setIsMobileOpen(!isMobileOpen)}
-            aria-label="Toggle mobile menu"
+            className="md:hidden p-3 rounded-2xl hover:bg-slate-100 transition-colors"
+            aria-label="Toggle menu"
           >
             {isMobileOpen ? (
-              // Close icon
-              <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             ) : (
-             
-              <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             )}
           </button>
         </div>
       </div>
 
-     
+      {/* Mobile Menu - Smooth Slide Down */}
       <div
         className={`
-          md:hidden overflow-hidden transition-all duration-400 ease-in-out
-          bg-white/95 backdrop-blur-md border-t border-slate-100
-          ${isMobileOpen ? 'max-h-[500px] py-5 shadow-lg' : 'max-h-0 py-0'}
+          md:hidden overflow-hidden bg-white/95 backdrop-blur-lg border-t border-slate-100
+          transition-all duration-500 ease-out shadow-xl
+          ${isMobileOpen ? 'max-h-[420px] opacity-100' : 'max-h-0 opacity-0'}
         `}
       >
-        <div className="flex flex-col px-4 space-y-2">
+        <div className="px-6 py-8 flex flex-col space-y-2">
           {navItems.map((item) => (
             <Link
               key={item.name}
               to={item.path}
-              className={`
-                block px-5 py-3.5 rounded-lg text-base font-medium transition-colors
-                ${location.pathname === item.path
-                  ? 'bg-green-50 text-green-700 font-semibold'
-                  : 'text-slate-800 hover:bg-green-50 hover:text-green-700'}
-              `}
               onClick={() => setIsMobileOpen(false)}
+              className={`
+                block px-6 py-4 rounded-2xl text-lg font-medium transition-all
+                ${location.pathname === item.path
+                  ? 'bg-green-50 text-green-700 font-semibold shadow-sm'
+                  : 'text-slate-700 hover:bg-slate-50 hover:text-green-700'}
+              `}
             >
               {item.name}
             </Link>
@@ -139,12 +150,12 @@ export default function Navbar() {
 
           <Link
             to="/contact"
-            className="
-              block mt-3 mx-5 py-3.5 text-center rounded-full font-semibold
-              bg-gradient-to-r from-green-600 to-green-800 text-white
-              hover:from-green-700 hover:to-green-900 active:scale-95 transition-all
-            "
             onClick={() => setIsMobileOpen(false)}
+            className="
+              mt-6 mx-6 py-4 text-center rounded-2xl font-semibold text-base
+              bg-gradient-to-r from-green-600 to-emerald-700 text-white
+              shadow-lg active:scale-[0.97] transition-all
+            "
           >
             Contact Us
           </Link>

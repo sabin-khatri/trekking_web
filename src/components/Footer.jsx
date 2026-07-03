@@ -13,7 +13,7 @@ import { GiMountainRoad } from 'react-icons/gi';
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-br from-green-950 via-green-900 to-emerald-950 text-white pt-16 pb-12">
+    <footer className="bg-gradient-to-br from-green-950 via-green-900 to-emerald-950    text-white pt-16 pb-12 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">

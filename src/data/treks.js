@@ -11,6 +11,22 @@ export const treks = [
     image: "src/assets/img/everest.jpg",
     link: "",
     featured: true,
+    itinerary: [
+      { day: 1, title: "Arrival in Kathmandu", description: "Welcome to Nepal! We will pick you up from the airport and transfer you to your hotel." },
+      { day: 2, title: "Fly to Lukla & Trek to Phakding", description: "A thrilling 35-minute flight to Lukla (2840m). We start our trek descending to the Dudh Kosi river and walk to Phakding (2610m)." },
+      { day: 3, title: "Trek to Namche Bazaar", description: "We enter the Sagarmatha National Park and cross suspension bridges before a steep climb to the Sherpa capital, Namche Bazaar (3440m)." },
+      { day: 4, title: "Acclimatization Day", description: "A rest day in Namche to acclimatize. We can hike up to the Everest View Hotel for our first panoramic view of Everest." },
+      { day: 5, title: "Trek to Tengboche", description: "A beautiful walk through rhododendron forests to reach Tengboche (3860m), home to the famous Tengboche Monastery." },
+      { day: 6, title: "Trek to Dingboche", description: "The trail descends to the river before climbing up to the Imja Valley and the summer valley of Dingboche (4410m)." },
+      { day: 7, title: "Acclimatization Day", description: "Another crucial acclimatization day. We can hike up Nangkartshang Peak for stunning views of Makalu." },
+      { day: 8, title: "Trek to Lobuche", description: "A challenging climb up the terminal moraine of the Khumbu Glacier to Lobuche (4910m)." },
+      { day: 9, title: "Everest Base Camp!", description: "The big day! We trek to Gorak Shep (5140m) and then continue to Everest Base Camp (5364m) before returning to Gorak Shep." },
+      { day: 10, title: "Kala Patthar & Pheriche", description: "Early morning hike to Kala Patthar (5545m) for the best sunrise view of Everest, then descend to Pheriche (4240m)." },
+      { day: 11, title: "Trek to Namche Bazaar", description: "A long descent brings us back to the familiar trails and comfortable lodges of Namche." },
+      { day: 12, title: "Trek to Lukla", description: "Our final day of walking. We cross the Hillary Suspension Bridge and return to Lukla for our last night in the mountains." },
+      { day: 13, title: "Fly to Kathmandu", description: "We take the early morning flight back to Kathmandu and transfer to our hotel." },
+      { day: 14, title: "Departure", description: "Transfer to the airport for your onward journey. Namaste and see you again!" },
+    ]
   },
   {
     name: "Annapurna Circuit",

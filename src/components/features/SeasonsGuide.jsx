@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { motion } from 'motion/react';
 import { Sun, CloudRain, Snowflake, Leaf } from 'lucide-react';

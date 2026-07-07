@@ -47,7 +47,7 @@ export default function Home() {
         <motion.div 
           className="absolute inset-0"
           style={{
-            backgroundImage: `url('src/assets/img/home.avif')`, 
+            backgroundImage: `url('/img/home.avif')`, 
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -189,9 +189,9 @@ export default function Home() {
 
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
             {[
-              { img: 'src/assets/img/everest.jpg', name: 'Everest Base Camp', desc: '14 days to the foot of the world’s highest peak.', level: 'Challenging' },
-              { img: 'src/assets/img/annapurna.jpg', name: 'Annapurna Circuit', desc: 'Diverse landscapes from subtropical forests to high-altitude deserts.', level: 'Challenging' },
-              { img: 'src/assets/img/langtang.webp', name: 'Langtang Valley', desc: 'A peaceful, less-crowded trail with stunning views and rich Tamang culture.', level: 'Moderate' }
+              { img: '/img/everest.jpg', name: 'Everest Base Camp', desc: '14 days to the foot of the world’s highest peak.', level: 'Challenging' },
+              { img: '/img/annapurna.jpg', name: 'Annapurna Circuit', desc: 'Diverse landscapes from subtropical forests to high-altitude deserts.', level: 'Challenging' },
+              { img: '/img/langtang.webp', name: 'Langtang Valley', desc: 'A peaceful, less-crowded trail with stunning views and rich Tamang culture.', level: 'Moderate' }
             ].map((trek, idx) => (
               <motion.div 
                 key={idx}

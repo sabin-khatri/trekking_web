@@ -8,7 +8,7 @@ export const treks = [
     price: 185000,
     description:
       "Follow the footsteps of legends to the base of the world's highest peak through Sherpa villages and breathtaking landscapes.",
-    image: "src/assets/img/everest.jpg",
+    image: "/img/everest.jpg",
     link: "",
     featured: true,
     itinerary: [
@@ -36,7 +36,7 @@ export const treks = [
     price: 160000,
     description:
       "A classic trek offering diverse landscapes, from lush forests to arid high deserts, with spectacular mountain vistas.",
-    image: "src/assets/img/annapurna.jpg",
+    image: "/img/annapurna.jpg",
     link: "",
     featured: true,
   },
@@ -48,7 +48,7 @@ export const treks = [
     price: 120000,
     description:
       'A peaceful, less-crowded trail with stunning views and rich Tamang culture, often called "the valley of glaciers".',
-    image: "src/assets/img/langtang.webp",
+    image: "/img/langtang.webp",
     link: "",
     featured: true,
   },
@@ -60,7 +60,7 @@ export const treks = [
     price: 175000,
     description:
       "Discover emerald-green glacial lakes and panoramic views of four 8,000m peaks in this spectacular alternative to EBC.",
-    image: "src/assets/img/gokyo-Lake.webp",
+    image: "/img/gokyo-Lake.webp",
     link: "",
     featured: false,
   },
@@ -72,7 +72,7 @@ export const treks = [
     price: 190000,
     description:
       "A culturally rich trek around the world's eighth highest mountain with fewer crowds and pristine landscapes.",
-    image: "src/assets/img/manaslu.jpeg",
+    image: "/img/manaslu.jpeg",
     link: "",
     featured: false,
   },
@@ -84,8 +84,44 @@ export const treks = [
     price: 85000,
     description:
       "A short trek perfect for breathtaking sunrise views over the Annapurna range, ideal for those with limited time.",
-    image: "src/assets/img/poonhill.webp",
+    image: "/img/poonhill.webp",
     link: "",
     featured: false,
   },
+  {
+    name: "Mardi Himal Trek",
+    category: "moderate",
+    location: "Annapurna Region",
+    duration: 7,
+    price: 95000,
+    description:
+      "A newly opened, off-the-beaten-path trek offering stunning ridge-line walking and up-close views of Machhapuchhre.",
+    image: "/img/img4.webp",
+    link: "",
+    featured: false,
+  },
+  {
+    name: "Upper Mustang Trek",
+    category: "challenging",
+    location: "Mustang Region",
+    duration: 15,
+    price: 210000,
+    description:
+      "Explore the hidden Kingdom of Lo in a trans-Himalayan desert region known for its ancient Tibetan culture and stunning caves.",
+    image: "/img/img5.avif",
+    link: "",
+    featured: false,
+  },
+  {
+    name: "Kanchenjunga Base Camp",
+    category: "challenging",
+    location: "Eastern Nepal",
+    duration: 21,
+    price: 240000,
+    description:
+      "A remote and rugged journey to the base of the world's third highest peak, untouched by mass tourism.",
+    image: "/img/img7.webp",
+    link: "",
+    featured: false,
+  }
 ];

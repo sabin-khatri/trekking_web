@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'motion/react';
+import { COMPANY } from '../config/company';
+import { IMAGES } from '../config/images';
 
 export default function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -10,10 +12,7 @@ export default function Navbar() {
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setHasScrolled(window.scrollY > 30);
-    };
-
+    const handleScroll = () => setHasScrolled(window.scrollY > 30);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -30,82 +29,72 @@ export default function Navbar() {
       className={`
         fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out
         ${hasScrolled 
-          ? 'bg-white/95  backdrop-blur-lg shadow-xl py-2' 
-          : 'bg-white/80  backdrop-blur-md py-3'}
+          ? 'bg-white/95 backdrop-blur-md shadow-md py-3' 
+          : 'bg-transparent py-5'}
       `}
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
-          {/* Logo - More Premium Look */}
-          <Link 
-            to="/" 
-            className="flex items-center gap-3 group"
-          >
-            <div className="flex items-center gap-2">
-              <img 
-                src="/img/logo.png" 
-                alt="Logo" className="h-10 w-auto" />
-            </div>
+          <Link to="/" className="flex items-center gap-3 group">
+            <img 
+              src={IMAGES.logo} 
+              alt={`${COMPANY.name} Logo`}
+              className="h-10 w-10 rounded-xl"
+            />
             <div>
               <span className="text-2xl sm:text-3xl font-bold tracking-tighter
                                bg-gradient-to-r from-green-700 via-emerald-600 to-green-500 
-                                 
                                bg-clip-text text-transparent">
-                Apex Himalaya
+                {COMPANY.shortName}
               </span>
-              <p className="text-[10px] text-slate-500  -mt-1 tracking-[2px] font-medium">EXPLORE NEPAL</p>
+              <p className="text-[10px] text-slate-500 -mt-1 tracking-[2px] font-medium">
+                {COMPANY.tagline}
+              </p>
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-10">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 to={item.path}
                 className={`
-                  relative text-slate-700  font-medium text-[15px] transition-all duration-300
-                  hover:text-green-700 :text-green-400 group
-                  ${location.pathname === item.path ? 'text-green-700 ' : ''}
+                  relative font-semibold text-[15px] transition-all duration-300
+                  group
+                  ${hasScrolled ? 'text-slate-800 hover:text-emerald-600' : 'text-white/90 hover:text-white'}
+                  ${location.pathname === item.path ? (hasScrolled ? 'text-emerald-600' : 'text-white') : ''}
                 `}
               >
                 {item.name}
                 {location.pathname === item.path && (
                   <motion.span
                     layoutId="underline"
-                    className="absolute -bottom-1.5 left-0 h-[2px] w-full bg-gradient-to-r from-green-600 to-emerald-500  "
+                    className="absolute -bottom-1.5 left-0 h-[2px] w-full bg-gradient-to-r from-emerald-500 to-green-500"
                   />
                 )}
               </Link>
             ))}
 
-            <div className="flex items-center gap-4">
-
-              {/* Contact Button */}
-              <Link
-                to="/contact"
-                className="
-                  px-7 py-2.5 rounded-2xl font-semibold text-sm tracking-wide
-                  bg-gradient-to-r from-green-600 to-emerald-700 text-white
-                   
-                  shadow-lg shadow-green-600/30 
-                  hover:shadow-xl hover:shadow-green-600/40 :shadow-green-500/30
-                  hover:-translate-y-0.5 active:scale-95
-                  transition-all duration-300
-                "
-              >
-                Contact Us
-              </Link>
-            </div>
+            <Link
+              to="/contact"
+              className="
+                px-7 py-2.5 rounded-2xl font-semibold text-sm tracking-wide
+                bg-gradient-to-r from-emerald-600 to-green-600 text-white
+                shadow-lg shadow-emerald-600/30 
+                hover:shadow-xl hover:shadow-emerald-600/40
+                hover:-translate-y-0.5 active:scale-95
+                transition-all duration-300
+              "
+            >
+              Contact Us
+            </Link>
           </div>
 
-          {/* Mobile Hamburger */}
           <div className="flex items-center gap-4 md:hidden">
-
             <button
               onClick={() => setIsMobileOpen(!isMobileOpen)}
-              className="p-2 rounded-2xl hover:bg-slate-100 :bg-slate-800 text-slate-700  transition-colors"
+              className={`p-2 rounded-2xl transition-colors ${hasScrolled ? 'hover:bg-slate-100 text-slate-700' : 'hover:bg-white/20 text-white'}`}
               aria-label="Toggle menu"
             >
               {isMobileOpen ? (
@@ -122,11 +111,10 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       <div
         className={`
-          md:hidden overflow-hidden bg-white/95  backdrop-blur-lg border-t border-slate-100 
-          transition-all duration-500 ease-out shadow-xl
+          md:hidden overflow-hidden glass border-t border-white/20 
+          transition-all duration-500 ease-out
           ${isMobileOpen ? 'max-h-[420px] opacity-100' : 'max-h-0 opacity-0'}
         `}
       >
@@ -139,8 +127,8 @@ export default function Navbar() {
               className={`
                 block px-6 py-4 rounded-2xl text-lg font-medium transition-all
                 ${location.pathname === item.path
-                  ? 'bg-green-50  text-green-700  font-semibold shadow-sm'
-                  : 'text-slate-700  hover:bg-slate-50 :bg-slate-800 hover:text-green-700 :text-green-400'}
+                  ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
+                  : 'text-slate-800 hover:bg-emerald-50/50 hover:text-emerald-600'}
               `}
             >
               {item.name}

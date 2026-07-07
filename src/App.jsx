@@ -14,6 +14,7 @@ const Packages = React.lazy(() => import('./pages/Packages'));
 const TrekDetail = React.lazy(() => import('./pages/TrekDetail'));
 const Contact = React.lazy(() => import('./pages/Contact'));
 const Gallery = React.lazy(() => import('./pages/Gallery'));
+const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
 function ScrollToTop() {
@@ -45,7 +46,7 @@ export default function App() {
   const location = useLocation();
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F9FAF8] text-[#2C3E2D] font-sans selection:bg-[#2C3E2D] selection:text-white">
+    <div className="flex min-h-screen flex-col bg-slate-50 text-[#2C3E2D] font-sans selection:bg-[#2C3E2D] selection:text-white">
       <ScrollProgress />
       <ScrollToTop />
       <Navbar />
@@ -60,6 +61,7 @@ export default function App() {
               <Route path="/packages/:id" element={<PageWrapper><TrekDetail /></PageWrapper>} />
               <Route path="/gallery" element={<PageWrapper><Gallery /></PageWrapper>} />
               <Route path="/contact" element={<PageWrapper><Contact /></PageWrapper>} />
+              <Route path="/admin" element={<PageWrapper><AdminDashboard /></PageWrapper>} />
               <Route path="*" element={<PageWrapper><NotFound /></PageWrapper>} />
             </Routes>
           </AnimatePresence>

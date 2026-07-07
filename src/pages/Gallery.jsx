@@ -101,7 +101,7 @@ export default function Gallery() {
         <motion.div 
           className="absolute inset-0"
           style={{
-            backgroundImage: `url('/src/assets/img/gallery.avif')`,
+            backgroundImage: `url('//img/gallery.avif')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundAttachment: 'fixed',

@@ -1,5 +1,6 @@
 // src/components/Footer.jsx
 import React from "react";
+import { Link } from "react-router-dom";
 import { 
   FaFacebookF, 
   FaInstagram, 
@@ -23,7 +24,7 @@ export default function Footer() {
             <div className="flex items-center gap-4">
               <div className="relative">
                 <img
-                  src="/src/assets/img/logo.png"
+                  src="//img/logo.png"
                   alt="Nepal Treks Logo"
                   className="h-14 w-14 rounded-2xl object-cover shadow-xl ring-2 ring-white/20 bg-white p-1.5"
                 />
@@ -32,7 +33,7 @@ export default function Footer() {
 
               <div>
                 <h3 className="text-3xl font-bold tracking-tighter">
-                  Nepal<span className="text-emerald-400">Treks</span>
+                  Apex <span className="text-emerald-400">Himalaya Treks</span>
                 </h3>
                 <p className="text-emerald-300 text-sm tracking-widest font-medium -mt-1">
                   SINCE 2010
@@ -41,8 +42,7 @@ export default function Footer() {
             </div>
 
             <p className="text-green-200/90 text-[15px] leading-relaxed max-w-md">
-              Unforgettable Himalayan journeys since 2010.<br />
-              Authentic, safe, and sustainable trekking experiences in the heart of Nepal.
+              Your premier trekking agency in Nepal. We specialize in safe, unforgettable, and eco-friendly Himalayan adventures.
             </p>
 
             <div className="flex items-center gap-2 text-emerald-400">
@@ -169,9 +169,9 @@ export default function Footer() {
           </div>
 
           <div className="text-center md:text-right text-green-300 text-sm">
-            <p>© {new Date().getFullYear()} Nepal Treks. All Rights Reserved.</p>
+            <p>© {new Date().getFullYear()} Apex Himalaya Treks. All Rights Reserved.</p>
             <p className="mt-1 text-xs text-green-400/80">
-              Crafted with passion for the mountains • Sustainable Tourism
+              Crafted with passion for the mountains • Sustainable Tourism • <Link to="/admin" className="hover:text-white transition-colors">Admin Portal</Link>
             </p>
           </div>
         </div>

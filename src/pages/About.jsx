@@ -39,7 +39,7 @@ export default function About() {
         <motion.div 
           className="absolute inset-0"
           style={{
-            backgroundImage: `url('src/assets/img/about.avif')`, 
+            backgroundImage: `url('/img/about.avif')`, 
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -128,7 +128,7 @@ export default function About() {
             className="order-1 md:order-2"
           >
             <img
-              src="src/assets/img/about1.avif"  
+              src="/img/about1.avif"  
               alt="Trekking in Himalayas"
               className="rounded-2xl shadow-2xl w-full h-auto object-cover aspect-[4/3] md:aspect-auto border border-transparent "
               loading="lazy"
@@ -318,15 +318,15 @@ export default function About() {
             {[
               {
                 caption: 'Sunrise at Everest Base Camp',
-                img: 'src/assets/img/everest.jpg',
+                img: '/img/everest.jpg',
               },
               {
                 caption: 'Annapurna Circuit',
-                img: 'src/assets/img/annapurna.jpg',
+                img: '/img/annapurna.jpg',
               },
               {
                 caption: 'Langtang Valley Culture',
-                img: 'src/assets/img/langtang.webp',    
+                img: '/img/langtang.webp',    
               },
             ].map((item, idx) => (
               <motion.div

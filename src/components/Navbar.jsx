@@ -42,24 +42,17 @@ export default function Navbar() {
             to="/" 
             className="flex items-center gap-3 group"
           >
-            <div className="relative">
-              <img
-                src="/src/assets/img/logo.png" 
-                alt="Nepal Treks Logo"
-                className="h-10 w-10 sm:h-11 sm:w-11 rounded-2xl object-cover shadow-md 
-                           ring-1 ring-white/50  transition-all duration-300 
-                           group-hover:scale-110 group-hover:-rotate-6"
-              />
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-green-400/20 to-transparent 
-                              opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="flex items-center gap-2">
+              <img 
+                src="/img/logo.png" 
+                alt="Logo" className="h-10 w-auto" />
             </div>
-
             <div>
               <span className="text-2xl sm:text-3xl font-bold tracking-tighter
                                bg-gradient-to-r from-green-700 via-emerald-600 to-green-500 
                                  
                                bg-clip-text text-transparent">
-                NepalTreks
+                Apex Himalaya
               </span>
               <p className="text-[10px] text-slate-500  -mt-1 tracking-[2px] font-medium">EXPLORE NEPAL</p>
             </div>

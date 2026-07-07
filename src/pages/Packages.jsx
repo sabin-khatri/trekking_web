@@ -94,7 +94,7 @@ export default function Packages() {
     addToast('All items removed from cart.', 'info');
   };
 
-  const Pagination = () => {
+  const renderPagination = () => {
     if (totalPages <= 1) return null;
 
     return (
@@ -150,7 +150,7 @@ export default function Packages() {
           animate={{ scale: 1 }}
           transition={{ duration: 1.5 }}
           style={{
-            backgroundImage: `url('src/assets/img/image.png')`,  
+            backgroundImage: `url('/img/image.png')`,  
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -368,7 +368,7 @@ export default function Packages() {
             </AnimatePresence>
           </motion.div>
 
-          <Pagination />
+          {renderPagination()}
         </div>
       </section>
 

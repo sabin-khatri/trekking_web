@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
-export default function SEO({ title, description, type = 'website', image = '/src/assets/img/everest.jpg' }) {
+export default function SEO({ title, description, type = 'website', image = '//img/everest.jpg' }) {
   const siteName = "Himalayan Treks & Adventures";
   const fullTitle = title === siteName ? title : `${title} | ${siteName}`;
   const defaultDescription = "Experience the breathtaking beauty of Nepal with our expertly guided trekking packages to Everest, Annapurna, and beyond.";

@@ -4,6 +4,9 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { galleryData } from '../data/galleryData';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
+import SEO from '../components/common/SEO';
+import { COMPANY } from '../config/company';
+import { IMAGES } from '../config/images';
 
 // Icons
 import { 
@@ -101,7 +104,7 @@ export default function Gallery() {
         <motion.div 
           className="absolute inset-0"
           style={{
-            backgroundImage: `url('//img/gallery.avif')`,
+            backgroundImage: `url(${IMAGES.hero.gallery})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundAttachment: 'fixed',
@@ -146,7 +149,7 @@ export default function Gallery() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             href="#gallery"
-            className="mt-10 inline-flex items-center gap-3 bg-white text-green-800 hover:bg-emerald-50 px-8 py-4 rounded-2xl font-semibold text-base transition-all hover:scale-105 shadow-xl"
+            className="mt-10 inline-flex items-center gap-3 bg-white text-slate-900 hover:bg-emerald-50 px-8 py-4 rounded-full font-semibold text-base transition-all hover:scale-105 shadow-2xl"
           >
             <FaImages className="text-xl" />
             Explore the Collection
@@ -186,8 +189,8 @@ export default function Gallery() {
                 className={`
                   px-7 py-3.5 rounded-2xl font-medium transition-all duration-300 text-sm sm:text-base
                   ${currentFilter === cat
-                    ? 'bg-gradient-to-r from-green-700 to-emerald-700   text-white shadow-lg scale-105 border-transparent'
-                    : 'bg-white  border border-green-200  text-green-700  hover:border-green-600 :border-green-500 hover:text-green-800 :text-green-300 hover:shadow-md'}
+                    ? 'bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg shadow-emerald-600/30 scale-105 border-transparent'
+                    : 'bg-white border border-slate-200 text-slate-600 hover:border-emerald-500 hover:text-emerald-600 hover:shadow-sm'}
                 `}
               >
                 {cat === 'all' ? 'All Photos' : (

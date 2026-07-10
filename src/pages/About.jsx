@@ -1,8 +1,9 @@
 // src/pages/About.jsx
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
-
-// Import only needed icons (tree-shaking friendly)
+import { IMAGES } from '../config/images';
+import { COMPANY } from '../config/company';
+import SEO from '../components/common/SEO';
 import { 
   FaMountain, 
   FaLeaf, 
@@ -31,6 +32,7 @@ export default function About() {
 
   return (
     <div className=" transition-colors duration-300">
+      <SEO title="About Us" description={`Learn about ${COMPANY.name} — founded in ${COMPANY.founded} by ${COMPANY.founder}. Our mission, team, and commitment to safe Himalayan trekking.`} />
       <header
         ref={heroRef}
         id="top"
@@ -39,7 +41,7 @@ export default function About() {
         <motion.div 
           className="absolute inset-0"
           style={{
-            backgroundImage: `url('/img/about.avif')`, 
+            backgroundImage: `url('${IMAGES.hero.about}')`, 
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -57,9 +59,9 @@ export default function About() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="
-              text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold
-              bg-gradient-to-r from-green-300 via-emerald-200 to-teal-200 bg-clip-text text-transparent
-              leading-tight drop-shadow-lg
+              text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight
+              bg-gradient-to-r from-emerald-300 via-green-200 to-teal-200 bg-clip-text text-transparent
+              leading-tight drop-shadow-xl
             "
           >
             Our Story
@@ -86,10 +88,10 @@ export default function About() {
             <a
               href="#mission"  
               className="
-                inline-flex items-center gap-2.5 bg-gradient-to-r from-green-600 to-emerald-700
-                hover:from-green-700 hover:to-emerald-800 text-white
-                px-7 py-3.5 rounded-full font-semibold text-base sm:text-lg
-                transition-all duration-300 hover:scale-105 hover:shadow-2xl shadow-lg
+                inline-flex items-center gap-2.5 bg-gradient-to-r from-emerald-600 to-green-600
+                hover:from-emerald-500 hover:to-green-500 text-white
+                px-8 py-4 rounded-full font-semibold text-base sm:text-lg
+                transition-all duration-300 hover:scale-105 shadow-xl shadow-emerald-600/30
               "
             >
               <GiMountainRoad className="text-xl sm:text-2xl" />
@@ -128,7 +130,7 @@ export default function About() {
             className="order-1 md:order-2"
           >
             <img
-              src="/img/about1.avif"  
+              src={IMAGES.about.mission}  
               alt="Trekking in Himalayas"
               className="rounded-2xl shadow-2xl w-full h-auto object-cover aspect-[4/3] md:aspect-auto border border-transparent "
               loading="lazy"
@@ -162,25 +164,25 @@ export default function About() {
                 year: '2010',
                 title: 'Founded',
                 desc: "Dorje Sherpa's vision begins.",
-                img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80',
+                img: '/img/img8.webp',
               },
               {
                 year: '2015',
                 title: 'First Int\'l Group',
                 desc: 'Everest Base Camp success.',
-                img: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=400&q=80',
+                img: '/img/img9.webp',
               },
               {
                 year: '2018',
                 title: 'Sustainability',
                 desc: 'Eco-friendly pledge made.',
-                img: 'https://images.unsplash.com/photo-1573153098012-67bdee4c62f1?auto=format&fit=crop&w=400&q=80',
+                img: '/img/img11.webp',
               },
               {
                 year: '2023',
                 title: '1000th Trekker',
                 desc: 'Milestone celebration.',
-                img: '/assets/img/about1.avif',
+                img: IMAGES.about.story,
               },
             ].map((item, idx) => (
               <motion.div
@@ -234,7 +236,7 @@ export default function About() {
                 role: 'Founder & Lead Guide',
                 desc: '20+ years of high-altitude expertise.',
                 quote: 'The mountains teach us humility and strength.',
-                img: '/assets/images/dorje.png',
+                img: '/img/img10.jpeg',
                 icon: <GiHiking className="text-5xl text-green-600 " />,
               },
               {
@@ -242,7 +244,7 @@ export default function About() {
                 role: 'Operations Manager',
                 desc: 'Ensures seamless trip planning.',
                 quote: 'Planning your adventure is my adventure!',
-                img: 'https://images.unsplash.com/photo-1619895862022-09114b41f16f?auto=format&fit=crop&w=500&q=80',
+                img: '/img/img12.jpg',
                 icon: <GiCompass className="text-5xl text-green-600 " />,
               },
               {
@@ -250,7 +252,7 @@ export default function About() {
                 role: 'Cultural Guide',
                 desc: "Shares Nepal's rich heritage.",
                 quote: "I'm a Nepali, but I'm also a traveler. I love to explore new places.",
-                img: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=500&q=80',
+                img: '/img/img2.jpg',
                 icon: <GiBackpack className="text-5xl text-green-600 " />,
               },
             ].map((member, idx) => (
@@ -402,9 +404,9 @@ export default function About() {
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
                 className="
-                  text-center p-6 md:p-8 rounded-2xl bg-gradient-to-b from-green-50 to-white 
+                  text-center p-6 md:p-8 rounded-3xl bg-white 
                    
-                  shadow-md hover:shadow-xl transition-all duration-300 border border-transparent 
+                  border border-slate-100 shadow-xl shadow-slate-200/40 hover:shadow-2xl transition-all duration-300
                 "
               >
                 <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-green-100  text-green-700  mx-auto mb-5 text-2xl">
@@ -419,28 +421,29 @@ export default function About() {
       </section>
 
       {/* CTA */}
-      <section id="call-to-action" className="bg-gradient-to-br from-green-700 via-green-800 to-emerald-900    py-16 md:py-24 transition-colors duration-300">
+      <section id="call-to-action" className="relative bg-slate-950 py-20 md:py-32 overflow-hidden transition-colors duration-300">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-900/20 via-slate-950 to-slate-950"></div>
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto text-center px-5"
+          className="relative z-10 max-w-4xl mx-auto text-center px-5"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight">
             Ready for your adventure?
           </h2>
-          <p className="mt-4 text-lg sm:text-xl text-green-100">
+          <p className="mt-6 text-lg sm:text-xl text-slate-300 font-light">
             Let’s find the perfect trek. Start planning today.
           </p>
           <a
             href="/packages"
             className="
-              mt-8 inline-flex items-center gap-2.5 bg-white text-green-800
+              mt-10 inline-flex items-center gap-3 bg-white text-slate-900
               px-8 py-4 rounded-full font-semibold text-base sm:text-lg
-              hover:bg-green-50 transition-all duration-300 hover:scale-105 shadow-xl
+              hover:bg-emerald-50 transition-all duration-300 hover:scale-105 shadow-2xl
             "
           >
-            <GiHiking className="text-xl" />
+            <GiHiking className="text-2xl text-emerald-600" />
             View Trekking Packages
           </a>
         </motion.div>

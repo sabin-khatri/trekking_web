@@ -2,6 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useToast } from '../components/ToastContext';
+import { IMAGES } from '../config/images';
 
 // react-icons imports
 import { 
@@ -68,7 +69,7 @@ export default function Contact() {
         <motion.div 
           className="absolute inset-0"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1740&q=80')`,
+            backgroundImage: `url(${IMAGES.hero.contact})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -108,10 +109,10 @@ export default function Contact() {
             href="#contact-form"
             className="
               mt-8 sm:mt-10 inline-flex items-center gap-3
-              bg-gradient-to-r from-green-600 to-emerald-700
-              hover:from-green-700 hover:to-emerald-800
-              text-white px-7 py-4 rounded-full font-semibold text-base sm:text-lg
-              transition-all duration-300 hover:scale-105 hover:shadow-2xl shadow-lg
+              bg-gradient-to-r from-emerald-600 to-green-600
+              hover:from-emerald-500 hover:to-green-500
+              text-white px-8 py-4 rounded-full font-semibold text-base sm:text-lg
+              transition-all duration-300 hover:scale-105 shadow-xl shadow-emerald-600/30
             "
           >
             <FaEnvelope className="text-xl sm:text-2xl" />
@@ -151,7 +152,7 @@ export default function Contact() {
                   className="flex items-start gap-5 p-5 rounded-2xl bg-white  shadow-md hover:shadow-lg transition-all duration-300 border border-transparent "
                 >
                   <div className="flex-shrink-0">
-                    <div className="h-14 w-14 rounded-full bg-green-600  text-white flex items-center justify-center text-2xl shadow-md">
+                    <div className="h-14 w-14 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white flex items-center justify-center text-2xl shadow-lg shadow-emerald-600/20">
                       {item.icon}
                     </div>
                   </div>
@@ -198,7 +199,7 @@ export default function Contact() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3.5 border border-slate-300  rounded-xl bg-white  text-slate-900  focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                  className="w-full px-5 py-3.5 border border-slate-300 rounded-xl bg-slate-50 text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                   placeholder="Your Name"
                 />
               </div>
@@ -214,7 +215,7 @@ export default function Contact() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3.5 border border-slate-300  rounded-xl bg-white  text-slate-900  focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                  className="w-full px-5 py-3.5 border border-slate-300 rounded-xl bg-slate-50 text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                   placeholder="your@example.com"
                 />
               </div>
@@ -229,7 +230,7 @@ export default function Contact() {
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  className="w-full px-5 py-3.5 border border-slate-300  rounded-xl bg-white  text-slate-900  focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                  className="w-full px-5 py-3.5 border border-slate-300 rounded-xl bg-slate-50 text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                   placeholder="Regarding your trek..."
                 />
               </div>
@@ -245,7 +246,7 @@ export default function Contact() {
                   value={formData.message}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3.5 border border-slate-300  rounded-xl bg-white  text-slate-900  focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all resize-y min-h-[120px]"
+                  className="w-full px-5 py-3.5 border border-slate-300 rounded-xl bg-slate-50 text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all resize-y min-h-[120px]"
                   placeholder="Tell us about your adventure plans..."
                 />
               </div>
@@ -258,8 +259,8 @@ export default function Contact() {
                     inline-flex items-center px-8 py-4 rounded-full text-white font-semibold text-base sm:text-lg
                     transition-all duration-300 transform hover:scale-105 w-full sm:w-auto justify-center
                     ${isSubmitting 
-                      ? 'bg-green-400 cursor-not-allowed' 
-                      : 'bg-gradient-to-r from-green-600 to-green-800 hover:from-green-700 hover:to-green-900 shadow-lg'}
+                      ? 'bg-slate-300 text-slate-500 cursor-not-allowed' 
+                      : 'bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 shadow-xl shadow-emerald-600/30'}
                   `}
                 >
                   {isSubmitting ? (

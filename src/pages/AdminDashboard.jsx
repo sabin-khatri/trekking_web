@@ -23,7 +23,7 @@ const StatCard = ({ title, value, icon: Icon, trend }) => (
         <TrendingUp size={14} /> {trend}
       </p>
     </div>
-    <div className="w-14 h-14 bg-forest-50 text-forest-600 rounded-xl flex items-center justify-center">
+    <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shadow-inner">
       <Icon size={28} />
     </div>
   </div>
@@ -53,16 +53,19 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('bookings');
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-8 pb-20">
+    <div className="min-h-screen bg-slate-50 pb-20">
       <SEO title="Admin Dashboard | Apex Himalaya" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-800">Dashboard</h1>
-          <p className="text-slate-500 mt-1">Welcome back, Admin. Here is what's happening today.</p>
+      {/* Header */}
+      <div className="bg-slate-950 pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden mb-8 shadow-xl">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-900/40 via-slate-950 to-slate-950"></div>
+        <div className="max-w-7xl mx-auto relative z-10">
+          <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">Dashboard</h1>
+          <p className="text-slate-300 mt-2 font-light">Welcome back, Admin. Here is what's happening today.</p>
         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-20">
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -83,7 +86,7 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab(tab)}
                 className={`py-4 text-sm font-semibold capitalize border-b-2 transition-colors ${
                   activeTab === tab 
-                    ? 'border-forest-600 text-forest-700' 
+                    ? 'border-emerald-600 text-emerald-700' 
                     : 'border-transparent text-slate-500 hover:text-slate-700'
                 }`}
               >
@@ -124,7 +127,7 @@ export default function AdminDashboard() {
                       <td className="px-6 py-4 text-sm font-medium text-slate-800">{booking.amount}</td>
                       <td className="px-6 py-4"><StatusBadge status={booking.status} /></td>
                       <td className="px-6 py-4 text-right">
-                        <button className="text-forest-600 hover:text-forest-800 text-sm font-semibold transition-colors">
+                        <button className="text-emerald-600 hover:text-emerald-800 text-sm font-semibold transition-colors">
                           View
                         </button>
                       </td>

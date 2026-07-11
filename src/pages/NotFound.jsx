@@ -1,18 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+import { motion } from 'motion/react';
 import { Map, Compass } from 'lucide-react';
 import SEO from '../components/common/SEO';
+import { COMPANY } from '../config/company';
 
 export default function NotFound() {
   return (
     <div className="min-h-[80vh] flex items-center justify-center bg-slate-50 p-6 relative overflow-hidden">
       <SEO 
-        title="404 - Lost off the trail | Himalayan Trekking" 
+        title="404 - Lost off the trail" 
         description="The page you are looking for does not exist."
       />
       
-      {/* Background decoration */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-5 pointer-events-none">
         <Map size={600} />
       </div>
@@ -38,7 +38,7 @@ export default function NotFound() {
             to="/"
             className="bg-forest-600 hover:bg-forest-700 text-white font-bold py-3 px-8 rounded-full shadow-lg shadow-forest-500/30 transition-all text-center"
           >
-            Back to Base Camp
+            Back to {COMPANY.shortName}
           </Link>
           <Link
             to="/packages"

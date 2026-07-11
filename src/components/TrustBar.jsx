@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { Shield, Award, Users, Star } from 'lucide-react';
 import { COMPANY } from '../config/company';

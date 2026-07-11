@@ -1,29 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-forest-50: #f2f7f4;
-  --color-forest-100: #e1efe5;
-  --color-forest-200: #c4dfcd;
-  --color-forest-300: #98c6a8;
-  --color-forest-400: #65a77c;
-  --color-forest-500: #428b5c;
-  --color-forest-600: #306e46;
-  --color-forest-700: #275839;
-  --color-forest-800: #21462f;
-  --color-forest-900: #1c3a27;
-  --color-forest-950: #0f2016;
+  /* Slate - Cool gray for mountain rocks and snow shadows */
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+  --color-slate-950: #020617;
 
-  --color-earth-50: #fbf8f3;
-  --color-earth-100: #f4eee2;
-  --color-earth-200: #eadbbf;
-  --color-earth-300: #dec395;
-  --color-earth-400: #d0a666;
-  --color-earth-500: #c58e45;
-  --color-earth-600: #b77637;
-  --color-earth-700: #985b2e;
-  --color-earth-800: #7d4b2b;
-  --color-earth-900: #643d25;
-  --color-earth-950: #361f11;
+  /* Green - Lush, vibrant green for the Hilly Regions */
+  --color-green-50: #ecfdf5;
+  --color-green-100: #d1fae5;
+  --color-green-200: #a7f3d0;
+  --color-green-300: #6ee7b7;
+  --color-green-400: #34d399;
+  --color-green-500: #10b981; /* Lush hill green */
+  --color-green-600: #059669;
+  --color-green-700: #047857;
+  --color-green-800: #065f46;
+  --color-green-900: #064e3b;
+  --color-green-950: #022c22;
+
+  /* Emerald - Icy Glacier Blue/Cyan for the Himalayas */
+  --color-emerald-50: #ecfeff;
+  --color-emerald-100: #cffafe;
+  --color-emerald-200: #a5f3fc;
+  --color-emerald-300: #67e8f9;
+  --color-emerald-400: #22d3ee;
+  --color-emerald-500: #06b6d4; /* Glacier cyan */
+  --color-emerald-600: #0891b2;
+  --color-emerald-700: #0e7490;
+  --color-emerald-800: #155e75;
+  --color-emerald-900: #164e63;
+  --color-emerald-950: #083344;
+  
+  /* Teal - Deep Alpine Lake Blue */
+  --color-teal-50: #eff6ff;
+  --color-teal-100: #dbeafe;
+  --color-teal-200: #bfdbfe;
+  --color-teal-300: #93c5fd;
+  --color-teal-400: #60a5fa;
+  --color-teal-500: #3b82f6;
+  --color-teal-600: #2563eb;
+  --color-teal-700: #1d4ed8;
+  --color-teal-800: #1e40af;
+  --color-teal-900: #1e3a8a;
+  --color-teal-950: #172554;
+
+  --font-sans: 'Outfit', 'Inter', sans-serif;
 }
 
 @layer base {
@@ -32,6 +63,42 @@
   }
   
   body {
-    @apply bg-[#F9FAF8] text-[#2C3E2D] antialiased selection:bg-[#2C3E2D] selection:text-white;
+    @apply bg-slate-50 text-slate-800 antialiased font-sans selection:bg-emerald-500 selection:text-white overflow-x-hidden;
   }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #10b981;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #059669;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/40 shadow-[0_8px_30px_rgb(0,0,0,0.04)];
+  }
+  .glass-dark {
+    @apply bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)];
+  }
+  .text-gradient {
+    @apply bg-gradient-to-r from-emerald-500 to-teal-400 bg-clip-text text-transparent;
+  }
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }

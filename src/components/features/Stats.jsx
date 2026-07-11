@@ -31,7 +31,7 @@ function Counter({ value, suffix }) {
 
 export default function Stats() {
   return (
-    <section className="py-20 bg-forest-600 text-white">
+    <section className="py-20 bg-green-700 text-white">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
           {stats.map((stat, index) => {
@@ -46,12 +46,12 @@ export default function Stats() {
                 className="flex flex-col items-center text-center"
               >
                 <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mb-6 backdrop-blur-sm">
-                  <Icon size={32} className="text-forest-100" />
+                  <Icon size={32} className="text-green-100" />
                 </div>
-                <h4 className="text-4xl md:text-5xl font-extrabold mb-2 tracking-tight">
+                <h4 className="text-4xl md:text-5xl font-extrabold mb-2 tracking-tight text-white">
                   <Counter value={stat.value} suffix={stat.suffix} />
                 </h4>
-                <p className="text-forest-100 font-medium text-lg">{stat.label}</p>
+                <p className="text-green-100 font-medium text-lg">{stat.label}</p>
               </motion.div>
             );
           })}

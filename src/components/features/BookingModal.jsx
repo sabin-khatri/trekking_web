@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { submitBooking } from '../../services/api';
@@ -51,52 +52,60 @@ export default function BookingModal({ trek, isOpen, onClose }) {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden z-10"
+            className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden z-10 max-h-[90vh] overflow-y-auto"
           >
-            <div className="bg-forest-600 px-6 py-4 flex justify-between items-center text-white">
+            <div
+              style={{ backgroundColor: '#15803d' }}
+              className="px-6 py-4 flex justify-between items-center text-white sticky top-0 z-10"
+            >
               <h2 className="text-xl font-bold">Book {trek.name}</h2>
-              <button onClick={onClose} className="p-1 hover:bg-white/20 rounded-full transition-colors">
+              <button
+                type="button"
+                onClick={onClose}
+                className="p-1 hover:bg-white/20 rounded-full transition-colors"
+              >
                 <X size={24} />
               </button>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
                 <input required type="text" name="name" value={formData.name} onChange={handleChange}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-forest-500 focus:border-forest-500 outline-none transition-all" />
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all" />
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
                   <input required type="email" name="email" value={formData.email} onChange={handleChange}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-forest-500 focus:border-forest-500 outline-none transition-all" />
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Preferred Date</label>
                   <input required type="date" name="date" value={formData.date} onChange={handleChange}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-forest-500 focus:border-forest-500 outline-none transition-all" />
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all" />
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Number of Travelers</label>
                 <input required type="number" min="1" max="20" name="travelers" value={formData.travelers} onChange={handleChange}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-forest-500 focus:border-forest-500 outline-none transition-all" />
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all" />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Special Requirements (Optional)</label>
                 <textarea name="message" rows="3" value={formData.message} onChange={handleChange}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-forest-500 focus:border-forest-500 outline-none transition-all resize-none"></textarea>
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all resize-none"></textarea>
               </div>
-              
+
               <div className="pt-2">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-forest-600 hover:bg-forest-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 flex justify-center items-center gap-2 disabled:opacity-70"
+                  style={{ backgroundColor: isSubmitting ? '#4b6f52' : '#15803d' }}
+                  className="w-full hover:brightness-110 text-white font-semibold py-3 rounded-xl transition-all duration-300 flex justify-center items-center gap-2 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'Processing...' : 'Confirm Booking Request'}
                 </button>

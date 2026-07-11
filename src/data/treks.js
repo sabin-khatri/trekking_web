@@ -1,4 +1,6 @@
 // src/data/treks.js
+import { IMAGES } from '../config/images';
+
 export const treks = [
   {
     name: "Everest Base Camp",
@@ -6,9 +8,10 @@ export const treks = [
     location: "Khumbu Region",
     duration: 14,
     price: 185000,
+    maxAltitude: "5,364m",
     description:
       "Follow the footsteps of legends to the base of the world's highest peak through Sherpa villages and breathtaking landscapes.",
-    image: "/img/everest.jpg",
+    image: IMAGES.treks.everest,
     link: "",
     featured: true,
     itinerary: [
@@ -34,11 +37,28 @@ export const treks = [
     location: "Annapurna Region",
     duration: 14,
     price: 160000,
+    maxAltitude: "5,416m",
     description:
       "A classic trek offering diverse landscapes, from lush forests to arid high deserts, with spectacular mountain vistas.",
-    image: "/img/annapurna.jpg",
+    image: IMAGES.treks.annapurna,
     link: "",
     featured: true,
+    itinerary: [
+      { day: 1, title: "Drive to Besisahar", description: "Scenic drive from Kathmandu to Besisahar, the starting point of the Annapurna Circuit." },
+      { day: 2, title: "Trek to Chamje", description: "Begin trekking through subtropical forests and cross suspension bridges over the Marsyangdi River." },
+      { day: 3, title: "Trek to Bagarchhap", description: "Climb through pine forests with views of Manaslu and Annapurna II." },
+      { day: 4, title: "Trek to Chame", description: "Enter the Manang district with dramatic rock formations and hot springs nearby." },
+      { day: 5, title: "Trek to Pisang", description: "Walk through a wide valley with stunning views of Annapurna II and IV." },
+      { day: 6, title: "Trek to Manang", description: "Acclimatization begins as we reach the cultural hub of Manang village." },
+      { day: 7, title: "Acclimatization in Manang", description: "Rest day with optional hike to Gangapurna Lake or Ice Lake for acclimatization." },
+      { day: 8, title: "Trek to Yak Kharka", description: "Gradual ascent through alpine meadows with views of the Annapurna massif." },
+      { day: 9, title: "Trek to Thorong Phedi", description: "Short but steep climb to the base of Thorong La pass." },
+      { day: 10, title: "Cross Thorong La & Muktinath", description: "Cross the 5,416m Thorong La pass — the highest point — and descend to sacred Muktinath." },
+      { day: 11, title: "Trek to Jomsom", description: "Descend through the Kali Gandaki valley, the world's deepest gorge." },
+      { day: 12, title: "Fly to Pokhara", description: "Morning flight to Pokhara with afternoon free to explore Lakeside." },
+      { day: 13, title: "Pokhara Sightseeing", description: "Visit Davis Falls, Peace Pagoda, and enjoy boating on Phewa Lake." },
+      { day: 14, title: "Return to Kathmandu", description: "Drive or fly back to Kathmandu. Farewell dinner in the evening." },
+    ]
   },
   {
     name: "Langtang Valley",
@@ -46,11 +66,22 @@ export const treks = [
     location: "Langtang Region",
     duration: 8,
     price: 120000,
+    maxAltitude: "4,984m",
     description:
       'A peaceful, less-crowded trail with stunning views and rich Tamang culture, often called "the valley of glaciers".',
-    image: "/img/langtang.webp",
+    image: IMAGES.treks.langtang,
     link: "",
     featured: true,
+    itinerary: [
+      { day: 1, title: "Drive to Syabrubesi", description: "Scenic 7-hour drive from Kathmandu to Syabrubesi through terraced hillsides." },
+      { day: 2, title: "Trek to Lama Hotel", description: "Enter Langtang National Park and trek through dense forest along the Langtang River." },
+      { day: 3, title: "Trek to Langtang Village", description: "Gradual climb with views of Langtang Lirung (7,227m) and traditional Tamang villages." },
+      { day: 4, title: "Trek to Kyanjin Gompa", description: "Reach the beautiful Kyanjin Gompa monastery surrounded by snow peaks." },
+      { day: 5, title: "Acclimatization Day", description: "Optional hike to Kyanjin Ri (4,773m) or Tserko Ri (4,984m) for panoramic views." },
+      { day: 6, title: "Trek to Lama Hotel", description: "Begin descent through the valley, retracing our steps." },
+      { day: 7, title: "Trek to Syabrubesi", description: "Final day of trekking back to Syabrubesi." },
+      { day: 8, title: "Drive to Kathmandu", description: "Return drive to Kathmandu. Transfer to hotel." },
+    ]
   },
   {
     name: "Gokyo Lakes Trek",
@@ -58,9 +89,10 @@ export const treks = [
     location: "Khumbu Region",
     duration: 13,
     price: 175000,
+    maxAltitude: "5,357m",
     description:
       "Discover emerald-green glacial lakes and panoramic views of four 8,000m peaks in this spectacular alternative to EBC.",
-    image: "/img/gokyo-Lake.webp",
+    image: IMAGES.treks.gokyo,
     link: "",
     featured: false,
   },
@@ -70,9 +102,10 @@ export const treks = [
     location: "Manaslu Region",
     duration: 16,
     price: 190000,
+    maxAltitude: "5,160m",
     description:
       "A culturally rich trek around the world's eighth highest mountain with fewer crowds and pristine landscapes.",
-    image: "/img/manaslu.jpeg",
+    image: IMAGES.treks.manaslu,
     link: "",
     featured: false,
   },
@@ -82,9 +115,10 @@ export const treks = [
     location: "Annapurna Region",
     duration: 5,
     price: 85000,
+    maxAltitude: "3,210m",
     description:
       "A short trek perfect for breathtaking sunrise views over the Annapurna range, ideal for those with limited time.",
-    image: "/img/poonhill.webp",
+    image: IMAGES.treks.poonhill,
     link: "",
     featured: false,
   },
@@ -94,9 +128,10 @@ export const treks = [
     location: "Annapurna Region",
     duration: 7,
     price: 95000,
+    maxAltitude: "4,500m",
     description:
       "A newly opened, off-the-beaten-path trek offering stunning ridge-line walking and up-close views of Machhapuchhre.",
-    image: "/img/img4.webp",
+    image: IMAGES.treks.mardi,
     link: "",
     featured: false,
   },
@@ -106,9 +141,10 @@ export const treks = [
     location: "Mustang Region",
     duration: 15,
     price: 210000,
+    maxAltitude: "3,840m",
     description:
       "Explore the hidden Kingdom of Lo in a trans-Himalayan desert region known for its ancient Tibetan culture and stunning caves.",
-    image: "/img/img5.avif",
+    image: IMAGES.treks.mustang,
     link: "",
     featured: false,
   },
@@ -118,9 +154,10 @@ export const treks = [
     location: "Eastern Nepal",
     duration: 21,
     price: 240000,
+    maxAltitude: "5,143m",
     description:
       "A remote and rugged journey to the base of the world's third highest peak, untouched by mass tourism.",
-    image: "/img/img7.webp",
+    image: IMAGES.treks.kanchenjunga,
     link: "",
     featured: false,
   }

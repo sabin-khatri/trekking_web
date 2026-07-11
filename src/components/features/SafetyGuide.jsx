@@ -77,7 +77,7 @@ export default function SafetyGuide() {
           <div className="relative z-10 md:flex items-center justify-between gap-8">
             <div className="md:w-2/3 mb-6 md:mb-0">
               <h4 className="text-2xl font-bold text-emerald-300 mb-2">Our Commitment to Your Safety</h4>
-              <p className="text-forest-100 leading-relaxed">
+              <p className="text-slate-600 text-sm">
                 All our guides are trained in wilderness first-aid and carry pulse oximeters to monitor your oxygen levels daily. We carry comprehensive medical kits and coordinate emergency helicopter evacuations if absolutely necessary.
               </p>
             </div>

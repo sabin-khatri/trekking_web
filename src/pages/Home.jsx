@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // src/pages/Home.jsx
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-render */
 /* eslint-disable no-unused-vars */
 import React, { useMemo, useState } from 'react';
 import { motion } from 'motion/react';

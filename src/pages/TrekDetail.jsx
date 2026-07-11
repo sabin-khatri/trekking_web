@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { useTrek } from '../hooks/useTreks';
 import BookingModal from '../components/features/BookingModal';
 import GearChecklist from '../components/features/GearChecklist';
+import RouteMap from '../components/features/RouteMap';
 import { MapPin, Clock, ArrowLeft, Mountain, CheckCircle2 } from 'lucide-react';
 
 export default function TrekDetail() {
@@ -87,6 +88,8 @@ export default function TrekDetail() {
                 ))}
               </div>
             </section>
+
+            <RouteMap trek={trek} />
             
             {trek.itinerary && trek.itinerary.length > 0 && (
               <section className="mt-16 pt-8 border-t border-slate-100">

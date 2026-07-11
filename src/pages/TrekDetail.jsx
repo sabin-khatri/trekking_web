@@ -36,7 +36,7 @@ export default function TrekDetail() {
     <div className="pb-20">
       {/* Hero Section */}
       <div className="relative h-[60vh] min-h-[400px] w-full">
-        <img src={`/${trek.image}`} alt={trek.name} className="absolute inset-0 w-full h-full object-cover" />
+        <img src={trek.image} alt={trek.name} className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
         
         <div className="absolute inset-0 flex items-end">
@@ -46,15 +46,17 @@ export default function TrekDetail() {
             </Link>
             
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <div className="inline-block px-3 py-1 bg-forest-500/80 backdrop-blur-sm text-white text-sm font-semibold rounded-full mb-4 uppercase tracking-wider">
+              <div className="inline-block px-3 py-1 bg-emerald-500/80 backdrop-blur-sm text-white text-sm font-semibold rounded-full mb-4 uppercase tracking-wider">
                 {trek.category}
               </div>
               <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">{trek.name}</h1>
               
               <div className="flex flex-wrap items-center gap-6 text-white/90">
-                <div className="flex items-center"><MapPin size={20} className="mr-2 text-forest-300" /> {trek.location}</div>
-                <div className="flex items-center"><Clock size={20} className="mr-2 text-forest-300" /> {trek.duration} Days</div>
-                <div className="flex items-center"><Mountain size={20} className="mr-2 text-forest-300" /> Max Alt: 5,545m</div>
+                <div className="flex items-center"><MapPin size={20} className="mr-2 text-emerald-400" /> {trek.location}</div>
+                <div className="flex items-center"><Clock size={20} className="mr-2 text-emerald-400" /> {trek.duration} Days</div>
+                {trek.maxAltitude && (
+                  <div className="flex items-center"><Mountain size={20} className="mr-2 text-emerald-400" /> Max Alt: {trek.maxAltitude}</div>
+                )}
               </div>
             </motion.div>
           </div>
@@ -79,7 +81,7 @@ export default function TrekDetail() {
               <div className="grid sm:grid-cols-2 gap-4">
                 {['Airport pick-up and drop-off', 'All necessary trekking permits', 'Experienced English-speaking guide', 'Accommodation during the trek', 'Three meals a day (B, L, D)', 'First aid medical kit'].map((item, i) => (
                   <div key={i} className="flex items-start">
-                    <CheckCircle2 className="text-forest-500 mt-1 mr-3 shrink-0" size={20} />
+                    <CheckCircle2 className="text-emerald-500 mt-1 mr-3 shrink-0" size={20} />
                     <span className="text-slate-600">{item}</span>
                   </div>
                 ))}
@@ -89,7 +91,7 @@ export default function TrekDetail() {
             {trek.itinerary && trek.itinerary.length > 0 && (
               <section className="mt-16 pt-8 border-t border-slate-100">
                 <h2 className="text-3xl font-bold text-slate-800 mb-12 text-center md:text-left">Day-by-Day Itinerary</h2>
-                <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-forest-300 before:to-transparent">
+                <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-emerald-300 before:to-transparent">
                   {trek.itinerary.map((day, index) => (
                     <motion.div 
                       key={day.day}
@@ -99,7 +101,7 @@ export default function TrekDetail() {
                       transition={{ duration: 0.6 }}
                       className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group"
                     >
-                      <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-forest-500 text-white font-bold shadow-md shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 relative">
+                      <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-emerald-500 text-white font-bold shadow-md shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 relative">
                         {day.day}
                       </div>
                       <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 hover:-translate-y-1 transition-transform duration-300">
@@ -144,7 +146,7 @@ export default function TrekDetail() {
               
               <button 
                 onClick={() => setIsBookingOpen(true)}
-                className="w-full bg-forest-600 hover:bg-forest-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-forest-600/30 hover:shadow-xl transition-all duration-300"
+                className="w-full bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-600/30 hover:scale-[1.02] transition-all duration-300"
               >
                 Book This Trek
               </button>

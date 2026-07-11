@@ -1,8 +1,8 @@
 // src/pages/Home.jsx
 import React, { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'motion/react';
 
-// Import only the icons you actually use (tree-shaking friendly)
 import { 
   FaMountain, 
   FaCompass, 
@@ -21,7 +21,10 @@ import FAQ from '../components/features/FAQ';
 import WeatherWidget from '../components/features/WeatherWidget';
 import SeasonsGuide from '../components/features/SeasonsGuide';
 import SafetyGuide from '../components/features/SafetyGuide';
+import TrustBar from '../components/TrustBar';
 import SEO from '../components/common/SEO';
+import { COMPANY } from '../config/company';
+import { IMAGES } from '../config/images';
 
 export default function Home() {
   const heroRef = useRef(null);
@@ -36,8 +39,8 @@ export default function Home() {
   return (
     <div className=" transition-colors duration-300">
       <SEO 
-        title="Himalayan Treks & Adventures" 
-        description="Your ultimate trekking partner in Nepal. We offer guided tours to Everest, Annapurna, Langtang, and more."
+        title={COMPANY.name}
+        description={`${COMPANY.description} Guided tours to Everest, Annapurna, Langtang, and more.`}
       />
       <header
         ref={heroRef}
@@ -47,7 +50,7 @@ export default function Home() {
         <motion.div 
           className="absolute inset-0"
           style={{
-            backgroundImage: `url('/img/home.avif')`, 
+            backgroundImage: `url(${IMAGES.hero.home})`, 
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -67,9 +70,9 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="
-              text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold
-              bg-gradient-to-r from-green-300 via-emerald-200 to-teal-200 bg-clip-text text-transparent
-              leading-tight drop-shadow-lg
+              text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight
+              bg-gradient-to-r from-emerald-300 via-green-200 to-teal-200 bg-clip-text text-transparent
+              leading-tight drop-shadow-xl
             "
           >
             Discover the Himalayas
@@ -81,10 +84,10 @@ export default function Home() {
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
             className="
               mt-5 sm:mt-6 text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto
-              text-slate-100 font-light
+              text-slate-200 font-light
             "
           >
-            Embark on a transformative journey with Nepal Treks, where adventure meets serenity.
+            Embark on a transformative journey with {COMPANY.name}, where adventure meets serenity.
           </motion.p>
 
           <motion.div
@@ -96,10 +99,10 @@ export default function Home() {
             <a
               href="#treks"
               className="
-                inline-flex items-center gap-2.5 bg-gradient-to-r from-green-600 to-emerald-700
-                hover:from-green-700 hover:to-emerald-800 text-white
-                px-7 py-3.5 rounded-full font-semibold text-base sm:text-lg
-                transition-all duration-300 hover:scale-105 hover:shadow-2xl shadow-lg
+                inline-flex items-center gap-2.5 bg-gradient-to-r from-emerald-600 to-green-600
+                hover:from-emerald-500 hover:to-green-500 text-white
+                px-8 py-4 rounded-full font-semibold text-base sm:text-lg
+                transition-all duration-300 hover:scale-105 shadow-xl shadow-emerald-600/30
               "
             >
               <GiHiking className="text-xl sm:text-2xl" />
@@ -108,8 +111,10 @@ export default function Home() {
           </motion.div>
         </motion.div>
       </header>
+
+      <TrustBar />
       
-      <section className="py-16 md:py-20 lg:py-28 bg-white  transition-colors duration-300">
+      <section className="py-16 md:py-20 lg:py-28 bg-white transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="text-center">
             <motion.h2 
@@ -118,7 +123,7 @@ export default function Home() {
               viewport={{ once: true }}
               className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-green-800 "
             >
-              Why Choose Nepal Treks?
+              Why Choose {COMPANY.shortName}?
             </motion.h2>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
@@ -144,10 +149,10 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="text-center p-6 md:p-8 rounded-2xl bg-gradient-to-b from-green-50 to-white   shadow-md hover:shadow-xl transition-shadow duration-300 border border-transparent "
+                whileHover={{ y: -8 }}
+                className="text-center p-6 md:p-8 rounded-3xl bg-white border border-slate-100 shadow-xl shadow-slate-200/40 hover:shadow-2xl transition-all duration-300 "
               >
-                <div className="inline-flex items-center justify-center h-14 w-14 md:h-16 md:w-16 rounded-full bg-green-100  text-green-700  mx-auto mb-5 text-2xl md:text-3xl">
+                <div className="inline-flex items-center justify-center h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-emerald-50 text-emerald-600 mx-auto mb-6 text-3xl md:text-4xl shadow-inner">
                   {feature.icon}
                 </div>
                 <h3 className="text-xl md:text-2xl font-bold text-slate-800 ">{feature.title}</h3>
@@ -189,9 +194,9 @@ export default function Home() {
 
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
             {[
-              { img: '/img/everest.jpg', name: 'Everest Base Camp', desc: '14 days to the foot of the world’s highest peak.', level: 'Challenging' },
-              { img: '/img/annapurna.jpg', name: 'Annapurna Circuit', desc: 'Diverse landscapes from subtropical forests to high-altitude deserts.', level: 'Challenging' },
-              { img: '/img/langtang.webp', name: 'Langtang Valley', desc: 'A peaceful, less-crowded trail with stunning views and rich Tamang culture.', level: 'Moderate' }
+              { img: IMAGES.treks.everest, slug: 'everest-base-camp', name: 'Everest Base Camp', desc: '14 days to the foot of the world\'s highest peak.', level: 'Challenging' },
+              { img: IMAGES.treks.annapurna, slug: 'annapurna-circuit', name: 'Annapurna Circuit', desc: 'Diverse landscapes from subtropical forests to high-altitude deserts.', level: 'Challenging' },
+              { img: IMAGES.treks.langtang, slug: 'langtang-valley', name: 'Langtang Valley', desc: 'A peaceful, less-crowded trail with stunning views and rich Tamang culture.', level: 'Moderate' }
             ].map((trek, idx) => (
               <motion.div 
                 key={idx}
@@ -219,9 +224,9 @@ export default function Home() {
                   </p>
                   <div className="mt-5 flex justify-between items-center text-sm font-medium">
                     <span className="text-green-600 ">{trek.level}</span>
-                    <a href="/packages" className="text-green-600  hover:text-green-800 :text-green-300">
+                    <Link to={`/packages/${trek.slug}`} className="text-green-600 hover:text-green-800">
                       Learn More →
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </motion.div>
@@ -234,17 +239,17 @@ export default function Home() {
             viewport={{ once: true }}
             className="mt-12 text-center"
           >
-            <a
-              href="/packages"
+            <Link
+              to="/packages"
               className="
-                inline-flex items-center gap-2.5 bg-gradient-to-r from-green-600 to-green-800 text-white
+                inline-flex items-center gap-2.5 bg-gradient-to-r from-emerald-600 to-green-600 text-white
                 px-8 py-4 rounded-full font-semibold text-base sm:text-lg
-                hover:from-green-700 hover:to-green-900 transition-all duration-300 hover:scale-105 shadow-lg
+                hover:from-emerald-500 hover:to-green-500 transition-all duration-300 hover:scale-105 shadow-xl shadow-emerald-600/30
               "
             >
               <FaCompass className="text-xl" />
               View All Treks
-            </a>
+            </Link>
           </motion.div>
         </div>
       </section>
@@ -253,30 +258,31 @@ export default function Home() {
       <FAQ />
 
       {/* Final CTA */}
-      <section className="bg-gradient-to-br from-green-700 via-green-800 to-emerald-900    py-16 md:py-24">
+      <section className="relative bg-slate-950 py-20 md:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-900/20 via-slate-950 to-slate-950"></div>
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto text-center px-5"
+          className="relative z-10 max-w-4xl mx-auto text-center px-5"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight">
             Ready for your adventure?
           </h2>
-          <p className="mt-4 text-lg sm:text-xl text-green-100">
+          <p className="mt-6 text-lg sm:text-xl text-slate-300 font-light">
             Let’s find the perfect trek. Start planning today.
           </p>
-          <a
-            href="/packages"
+          <Link
+            to="/packages"
             className="
-              mt-8 inline-flex items-center gap-2.5 bg-white text-green-800
+              mt-10 inline-flex items-center gap-3 bg-white text-slate-900
               px-8 py-4 rounded-full font-semibold text-base sm:text-lg
-              hover:bg-green-50 transition-all duration-300 hover:scale-105 shadow-xl
+              hover:bg-emerald-50 transition-all duration-300 hover:scale-105 shadow-2xl
             "
           >
-            <GiHiking className="text-xl" />
+            <GiHiking className="text-2xl text-emerald-600" />
             View Trekking Packages
-          </a>
+          </Link>
         </motion.div>
       </section>
     </div>

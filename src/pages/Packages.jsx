@@ -6,6 +6,8 @@ import { useToast } from '../components/ToastContext';
 import { Link } from 'react-router-dom';
 import AnimatedMap from '../components/features/AnimatedMap';
 import SEO from '../components/common/SEO';
+import { COMPANY } from '../config/company';
+import { IMAGES } from '../config/images';
 
 // Import only used icons (tree-shaking friendly)
 import { 
@@ -150,7 +152,7 @@ export default function Packages() {
           animate={{ scale: 1 }}
           transition={{ duration: 1.5 }}
           style={{
-            backgroundImage: `url('/img/image.png')`,  
+            backgroundImage: `url(${IMAGES.hero.packages})`,  
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -163,7 +165,7 @@ export default function Packages() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold bg-gradient-to-r from-green-300 via-emerald-200 to-teal-200 bg-clip-text text-transparent leading-tight drop-shadow-lg"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold bg-gradient-to-r from-emerald-300 via-green-200 to-teal-200 bg-clip-text text-transparent leading-tight drop-shadow-xl"
           >
             Our Trekking Packages
           </motion.h1>
@@ -215,7 +217,7 @@ export default function Packages() {
                   setCurrentSearch(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300  bg-white  text-slate-800  focus:ring-2 focus:ring-green-500 focus:border-transparent text-base transition-colors"
+                className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-base transition-all shadow-sm hover:shadow-md"
               />
             </div>
 
@@ -225,7 +227,7 @@ export default function Packages() {
                 setCurrentSort(e.target.value);
                 setCurrentPage(1);
               }}
-              className="px-4 py-3 rounded-xl border border-gray-300  bg-white  text-slate-800  focus:ring-2 focus:ring-green-500 text-base transition-colors"
+              className="px-4 py-3.5 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm text-slate-800 focus:ring-2 focus:ring-emerald-500 text-base transition-all shadow-sm hover:shadow-md outline-none"
             >
               <option value="default">Sort by: Default</option>
               <option value="price-asc">Price: Low to High</option>
@@ -234,16 +236,16 @@ export default function Packages() {
               <option value="duration-desc">Duration: Long to Short</option>
             </select>
             
-            <div className="flex gap-2 bg-slate-100  p-1 rounded-xl">
+            <div className="flex gap-2 bg-slate-100/80 backdrop-blur-sm p-1.5 rounded-2xl">
               <button 
                 onClick={() => setViewMode('grid')}
-                className={`p-3 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-white  shadow text-green-600 ' : 'text-slate-500 '}`}
+                className={`p-3 rounded-xl transition-all ${viewMode === 'grid' ? 'bg-white shadow-md text-emerald-600 scale-105' : 'text-slate-500 hover:text-emerald-500'}`}
               >
                 <FaThLarge />
               </button>
               <button 
                 onClick={() => setViewMode('list')}
-                className={`p-3 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-white  shadow text-green-600 ' : 'text-slate-500 '}`}
+                className={`p-3 rounded-xl transition-all ${viewMode === 'list' ? 'bg-white shadow-md text-emerald-600 scale-105' : 'text-slate-500 hover:text-emerald-500'}`}
               >
                 <FaList />
               </button>
@@ -259,10 +261,10 @@ export default function Packages() {
                   setCurrentFilter(filter);
                   setCurrentPage(1);
                 }}
-                className={`px-6 py-3 rounded-full font-medium text-base transition-all duration-300 ${
+                className={`px-7 py-3.5 rounded-full font-medium text-base transition-all duration-300 ${
                   currentFilter === filter
-                    ? 'bg-green-800  text-white scale-105 shadow-lg border-transparent'
-                    : 'border-2 border-green-800  text-green-800  hover:bg-green-800 hover:text-white :bg-green-600 :text-white'
+                    ? 'bg-gradient-to-r from-emerald-600 to-green-600 text-white scale-105 shadow-lg shadow-emerald-600/30 border-transparent'
+                    : 'bg-white border border-slate-200 text-slate-600 hover:border-emerald-500 hover:text-emerald-600 shadow-sm'
                 }`}
               >
                 {filter === 'all' ? (
@@ -349,13 +351,13 @@ export default function Packages() {
                         <div className="flex gap-3">
                           <button
                             onClick={() => addToCart(trek)}
-                            className="bg-green-600 hover:bg-green-700  :bg-green-600 text-white px-5 py-2.5 rounded-lg font-medium transition-all hover:scale-105 flex items-center gap-2 text-sm sm:text-base"
+                            className="bg-gradient-to-r from-emerald-600 to-green-600 text-white px-5 py-2.5 rounded-xl font-medium transition-all hover:scale-105 flex items-center gap-2 text-sm sm:text-base shadow-lg shadow-emerald-600/30"
                           >
                             <FaCartPlus className="text-lg" /> Add
                           </button>
                           <Link
                             to={`/packages/${trek.name.toLowerCase().replace(/\s+/g, '-')}`}
-                            className="border border-green-600  text-green-600  hover:bg-green-600 :bg-green-500 hover:text-white :text-white px-5 py-2.5 rounded-lg font-medium transition-all hover:scale-105 flex items-center gap-2 text-sm sm:text-base"
+                            className="border border-emerald-600 text-emerald-600 hover:bg-emerald-50 px-5 py-2.5 rounded-xl font-medium transition-all hover:scale-105 flex items-center gap-2 text-sm sm:text-base"
                           >
                             <FaInfoCircle className="text-lg" /> Details
                           </Link>
@@ -502,7 +504,7 @@ export default function Packages() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setShowCartModal(true)}
-        className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 bg-green-600  text-white p-5 sm:p-6 rounded-full shadow-2xl hover:bg-green-700 :bg-green-600 transition-colors z-40"
+        className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 bg-gradient-to-r from-emerald-600 to-green-600 text-white p-5 sm:p-6 rounded-full shadow-2xl hover:shadow-emerald-600/50 transition-all z-40"
       >
         <BsCart className="text-2xl sm:text-3xl" />
         {cart && (

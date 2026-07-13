@@ -6,12 +6,14 @@ import { useTrek } from '../hooks/useTreks';
 import BookingModal from '../components/features/BookingModal';
 import GearChecklist from '../components/features/GearChecklist';
 import RouteMap from '../components/features/RouteMap';
-import { MapPin, Clock, ArrowLeft, Mountain, CheckCircle2 } from 'lucide-react';
+import { MapPin, Clock, ArrowLeft, Mountain, CheckCircle2, Heart } from 'lucide-react';
+import { useWishlist } from '../components/WishlistContext';
 
 export default function TrekDetail() {
   const { id } = useParams();
   const { trek, loading, error } = useTrek(id);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const { toggleWishlist, isInWishlist } = useWishlist();
 
   if (loading) {
     return (
@@ -149,10 +151,24 @@ export default function TrekDetail() {
               
               <button 
                 onClick={() => setIsBookingOpen(true)}
-                className="w-full bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-600/30 hover:scale-[1.02] transition-all duration-300"
+                className="w-full bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
               >
                 Book This Trek
               </button>
+
+              <motion.button 
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => toggleWishlist(trek.id)}
+                className={`w-full mt-3 font-semibold py-3.5 rounded-xl border flex items-center justify-center gap-2.5 transition-all duration-300 cursor-pointer ${
+                  isInWishlist(trek.id)
+                    ? 'bg-red-50 border-red-200 text-red-600 hover:bg-red-100/50 shadow-sm'
+                    : 'border-slate-200 hover:border-red-200 text-slate-600 hover:text-red-500 hover:bg-red-50/10'
+                }`}
+              >
+                <Heart className={isInWishlist(trek.id) ? "fill-red-500 text-red-500" : "text-current"} size={20} />
+                {isInWishlist(trek.id) ? 'Saved to Wishlist' : 'Save for Later'}
+              </motion.button>
             </div>
           </div>
 

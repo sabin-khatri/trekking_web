@@ -64,6 +64,18 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
     }
   }, [isOpen]);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   // ✅ Early return AB sabai hooks declare bhaisakepachi xa — yo sahi place ho
   if (!isOpen) return null;
 

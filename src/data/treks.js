@@ -3,6 +3,7 @@ import { IMAGES } from '../config/images';
 
 export const treks = [
   {
+    id: "everest-base-camp",
     name: "Everest Base Camp",
     category: "challenging",
     location: "Khumbu Region",
@@ -32,6 +33,7 @@ export const treks = [
     ]
   },
   {
+    id: "annapurna-circuit",
     name: "Annapurna Circuit",
     category: "moderate",
     location: "Annapurna Region",
@@ -61,6 +63,7 @@ export const treks = [
     ]
   },
   {
+    id: "langtang-valley",
     name: "Langtang Valley",
     category: "moderate",
     location: "Langtang Region",
@@ -84,6 +87,7 @@ export const treks = [
     ]
   },
   {
+    id: "gokyo-lakes-trek",
     name: "Gokyo Lakes Trek",
     category: "challenging",
     location: "Khumbu Region",
@@ -97,6 +101,7 @@ export const treks = [
     featured: false,
   },
   {
+    id: "manaslu-circuit",
     name: "Manaslu Circuit",
     category: "challenging",
     location: "Manaslu Region",
@@ -110,6 +115,7 @@ export const treks = [
     featured: false,
   },
   {
+    id: "poon-hill-trek",
     name: "Poon Hill Trek",
     category: "moderate",
     location: "Annapurna Region",
@@ -123,6 +129,7 @@ export const treks = [
     featured: false,
   },
   {
+    id: "mardi-himal-trek",
     name: "Mardi Himal Trek",
     category: "moderate",
     location: "Annapurna Region",
@@ -136,6 +143,7 @@ export const treks = [
     featured: false,
   },
   {
+    id: "upper-mustang-trek",
     name: "Upper Mustang Trek",
     category: "challenging",
     location: "Mustang Region",
@@ -149,6 +157,7 @@ export const treks = [
     featured: false,
   },
   {
+    id: "kanchenjunga-base-camp",
     name: "Kanchenjunga Base Camp",
     category: "challenging",
     location: "Eastern Nepal",

@@ -8,6 +8,7 @@ import AnimatedMap from '../components/features/AnimatedMap';
 import SEO from '../components/common/SEO';
 import { COMPANY } from '../config/company';
 import { IMAGES } from '../config/images';
+import { useWishlist } from '../components/WishlistContext';
 
 // Import only used icons (tree-shaking friendly)
 import { 
@@ -43,6 +44,7 @@ export default function Packages() {
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   
   const { addToast } = useToast();
+  const { toggleWishlist, isInWishlist } = useWishlist();
 
   const itemsPerPage = 6;
 
@@ -323,6 +325,21 @@ export default function Packages() {
                       <span className="absolute top-4 right-4 bg-black/70 text-white text-sm px-3 py-1 rounded-full">
                         {trek.duration} Days
                       </span>
+                      
+                      {/* Wishlist Heart Overlay */}
+                      <motion.button
+                        whileHover={{ scale: 1.15 }}
+                        whileTap={{ scale: 0.85 }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleWishlist(trek.id);
+                        }}
+                        className="absolute bottom-4 right-4 z-10 w-10 h-10 rounded-full glass flex items-center justify-center text-slate-700 hover:text-red-500 shadow-md transition-colors cursor-pointer"
+                        aria-label="Add to Wishlist"
+                      >
+                        <FaHeart className={isInWishlist(trek.id) ? "text-red-500 scale-110" : "text-slate-400"} />
+                      </motion.button>
                     </div>
 
                     <div className={`p-6 ${viewMode === 'list' ? 'sm:w-2/3 flex flex-col justify-center' : ''}`}>
@@ -356,7 +373,7 @@ export default function Packages() {
                             <FaCartPlus className="text-lg" /> Add
                           </button>
                           <Link
-                            to={`/packages/${trek.name.toLowerCase().replace(/\s+/g, '-')}`}
+                            to={`/packages/${trek.id}`}
                             className="border border-emerald-600 text-emerald-600 hover:bg-emerald-50 px-5 py-2.5 rounded-xl font-medium transition-all hover:scale-105 flex items-center gap-2 text-sm sm:text-base"
                           >
                             <FaInfoCircle className="text-lg" /> Details

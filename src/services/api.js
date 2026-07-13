@@ -12,7 +12,7 @@ export const fetchTreks = async () => {
 
 export const fetchTrekById = async (id) => {
   await delay(500);
-  const trek = treks.find((t) => t.name.toLowerCase().replace(/\s+/g, '-') === id);
+  const trek = treks.find((t) => t.id === id);
   if (!trek) throw new Error('Trek not found');
   return trek;
 };

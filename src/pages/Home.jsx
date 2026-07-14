@@ -24,6 +24,8 @@ import SeasonsGuide from '../components/features/SeasonsGuide';
 import SafetyGuide from '../components/features/SafetyGuide';
 import TrustBar from '../components/TrustBar';
 import SEO from '../components/common/SEO';
+import InteractiveMap from '../components/features/InteractiveMap';
+import Stats from '../components/features/Stats';
 import { COMPANY } from '../config/company';
 import { IMAGES } from '../config/images';
 
@@ -166,6 +168,8 @@ export default function Home() {
         </div>
       </section>
 
+      <Stats />
+
       <SeasonsGuide />
       
       <SafetyGuide />
@@ -254,6 +258,8 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
+      <InteractiveMap />
 
       <Testimonials />
       <FAQ />

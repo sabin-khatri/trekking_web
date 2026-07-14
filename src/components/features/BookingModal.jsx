@@ -195,6 +195,7 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
       };
 
       await submitBooking(summaryPayload);
+      localStorage.setItem('has_booked', 'true');
       addToast('Thank you! Your booking request has been submitted successfully.', 'success');
       onClose();
       navigate('/packages');

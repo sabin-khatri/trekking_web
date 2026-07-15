@@ -7,11 +7,13 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollProgress from './components/ScrollProgress';
 import WhatsAppButton from './components/WhatsAppButton';
+import LiveBookingNotifier from './components/features/LiveBookingNotifier';
 
 const Home = React.lazy(() => import('./pages/Home'));
 const About = React.lazy(() => import('./pages/About'));
 const Packages = React.lazy(() => import('./pages/Packages'));
 const TrekDetail = React.lazy(() => import('./pages/TrekDetail'));
+const Planner = React.lazy(() => import('./pages/Planner'));
 const Contact = React.lazy(() => import('./pages/Contact'));
 const Gallery = React.lazy(() => import('./pages/Gallery'));
 const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
@@ -59,6 +61,7 @@ export default function App() {
               <Route path="/about" element={<PageWrapper><About /></PageWrapper>} />
               <Route path="/packages" element={<PageWrapper><Packages /></PageWrapper>} />
               <Route path="/packages/:id" element={<PageWrapper><TrekDetail /></PageWrapper>} />
+              <Route path="/planner" element={<PageWrapper><Planner /></PageWrapper>} />
               <Route path="/gallery" element={<PageWrapper><Gallery /></PageWrapper>} />
               <Route path="/contact" element={<PageWrapper><Contact /></PageWrapper>} />
               <Route path="/admin" element={<PageWrapper><AdminDashboard /></PageWrapper>} />
@@ -70,6 +73,7 @@ export default function App() {
 
       <Footer />
       <WhatsAppButton />
+      <LiveBookingNotifier />
     </div>
   );
 }

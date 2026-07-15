@@ -5,6 +5,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import App from './App.jsx';
 import './index.css';
 import { ToastProvider } from './components/ToastContext';
+import { WishlistProvider } from './components/WishlistContext';
 import ErrorBoundary from './components/common/ErrorBoundary';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -12,9 +13,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <ErrorBoundary>
       <HelmetProvider>
         <ToastProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
+          <WishlistProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </WishlistProvider>
         </ToastProvider>
       </HelmetProvider>
     </ErrorBoundary>

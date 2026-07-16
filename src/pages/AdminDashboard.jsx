@@ -10,7 +10,7 @@ import CustomersTab from '../components/admin/Customerstab';
 import CustomerDetailModal from '../components/admin/Customerdetailmodal';
 import SettingsTab from '../components/admin/Settingstab';
 import PackagesTab from '../components/admin/Packagestab';
-import dummyBookings from '../data/dummyBookings';
+import dummyBookings from '../data/Dummybookings';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('bookings');

@@ -7,9 +7,9 @@ import StatCard from '../components/admin/StatCard';
 import StatusBadge from '../components/admin/StatusBadge';
 import BookingDetailModal from '../components/admin/BookingDetailModal';
 import CustomersTab from '../components/admin/Customerstab';
-import CustomerDetailModal from '../components/admin/CustomerDetailModal';
-import SettingsTab from '../components/admin/SettingsTab';
-import PackagesTab from '../components/admin/PackagesTab';
+import CustomerDetailModal from '../components/admin/Customerdetailmodal';
+import SettingsTab from '../components/admin/Settingstab';
+import PackagesTab from '../components/admin/Packagestab';
 import dummyBookings from '../data/dummyBookings';
 
 export default function AdminDashboard() {

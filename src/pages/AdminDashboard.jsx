@@ -6,7 +6,7 @@ import SEO from '../components/common/SEO';
 import StatCard from '../components/admin/StatCard';
 import StatusBadge from '../components/admin/StatusBadge';
 import BookingDetailModal from '../components/admin/BookingDetailModal';
-import CustomersTab from '../components/admin/CustomersTab';
+import CustomersTab from '../components/admin/Customerstab';
 import CustomerDetailModal from '../components/admin/CustomerDetailModal';
 import SettingsTab from '../components/admin/SettingsTab';
 import PackagesTab from '../components/admin/PackagesTab';

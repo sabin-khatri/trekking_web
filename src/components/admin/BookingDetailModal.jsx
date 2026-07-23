@@ -6,7 +6,7 @@ import {
   Clock, X, Mail, Phone, CreditCard, Mountain, User as UserIcon
 } from 'lucide-react';
 import StatusBadge from './StatusBadge';
-import DetailRow from './DetailRow';
+import DetailRow from './Detailrow';
 
 export default function BookingDetailModal({ booking, onClose }) {
   if (!booking) return null;

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Search } from 'lucide-react';
-import dummyCustomers from '../../data/dummyCustomers';
+import dummyCustomers from '../../data/Dummycustomers';
 
 export default function CustomersTab({ onSelectCustomer }) {
   const [query, setQuery] = useState('');

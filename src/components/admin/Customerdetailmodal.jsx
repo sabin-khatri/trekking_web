@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Mail, Phone, MapPin, Calendar, DollarSign, Mountain } from 'lucide-react';
-import DetailRow from './DetailRow';
+import DetailRow from './Detailrow';
 
 export default function CustomerDetailModal({ customer, onClose }) {
   if (!customer) return null;

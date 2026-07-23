@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Plus, Pencil, Trash2, MapPin, Clock, Users, Mountain } from 'lucide-react';
-import dummyPackages from '../../data/dummyPackages';
-import PackageFormModal from './PackageFormModal';
+import dummyPackages from '../../data/Dummypackages';
+import PackageFormModal from './Packageformmodal';
 
 export default function PackagesTab() {
   const [packages, setPackages] = useState(dummyPackages);

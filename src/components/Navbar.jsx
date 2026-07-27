@@ -22,9 +22,9 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Lock body scroll when wishlist drawer is open
+  // Lock body scroll when wishlist drawer or mobile menu is open
   useEffect(() => {
-    if (isWishlistOpen) {
+    if (isWishlistOpen || isMobileOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
@@ -32,7 +32,7 @@ export default function Navbar() {
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [isWishlistOpen]);
+  }, [isWishlistOpen, isMobileOpen]);
 
   const navItems = [
     { name: 'Home', path: '/' },
@@ -55,32 +55,32 @@ export default function Navbar() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
             <img 
               src={IMAGES.logo} 
               alt={`${COMPANY.name} Logo`}
-              className="h-10 w-10 rounded-xl"
+              className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3"
             />
             <div>
-              <span className="text-2xl sm:text-3xl font-bold tracking-tighter
+              <span className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tighter
                                bg-gradient-to-r from-green-700 via-emerald-600 to-green-500 
                                bg-clip-text text-transparent">
                 {COMPANY.shortName}
               </span>
-              <p className="text-[10px] text-slate-500 -mt-1 tracking-[2px] font-medium">
+              <p className="hidden sm:block text-[10px] text-slate-500 -mt-1 tracking-[2px] font-medium">
                 {COMPANY.tagline}
               </p>
             </div>
           </Link>
 
-          <div className="hidden md:flex items-center gap-10">
+          <div className="hidden md:flex items-center gap-5 lg:gap-8 xl:gap-10">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 to={item.path}
                 className={`
-                  relative font-semibold text-[15px] transition-all duration-300
-                  group
+                  relative font-semibold text-sm lg:text-[15px] whitespace-nowrap transition-all duration-300
+                  group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 rounded-md
                   ${hasScrolled ? 'text-slate-800 hover:text-emerald-600' : 'text-white/90 hover:text-white'}
                   ${location.pathname === item.path ? (hasScrolled ? 'text-emerald-600' : 'text-white') : ''}
                 `}
@@ -100,6 +100,7 @@ export default function Navbar() {
               className={`
                 relative p-2.5 rounded-xl transition-all duration-300 flex items-center justify-center
                 hover:scale-105 active:scale-95 hover:bg-slate-100/10
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50
                 ${hasScrolled ? 'text-slate-700 hover:text-emerald-600 hover:bg-slate-100' : 'text-white/90 hover:text-white'}
               `}
               aria-label="Wishlist"
@@ -115,11 +116,12 @@ export default function Navbar() {
             <Link
               to="/contact"
               className="
-                px-7 py-2.5 rounded-2xl font-semibold text-sm tracking-wide
+                px-5 lg:px-7 py-2.5 rounded-2xl font-semibold text-sm tracking-wide whitespace-nowrap
                 bg-gradient-to-r from-emerald-600 to-green-600 text-white
                 shadow-lg shadow-emerald-600/30 
                 hover:shadow-xl hover:shadow-emerald-600/40
                 hover:-translate-y-0.5 active:scale-95
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50
                 transition-all duration-300
               "
             >
@@ -132,14 +134,14 @@ export default function Navbar() {
               onClick={() => setIsWishlistOpen(true)}
               className={`
                 relative p-2.5 rounded-xl transition-all duration-300 flex items-center justify-center
-                active:scale-95
+                active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50
                 ${hasScrolled ? 'text-slate-700 hover:text-emerald-600 hover:bg-slate-100' : 'text-white/90 hover:bg-white/10'}
               `}
               aria-label="Wishlist"
             >
               <FaHeart className={wishlist.length > 0 ? "text-red-500" : "text-current"} size={22} />
               {wishlist.length > 0 && (
-                <span className="absolute top-0 right-0 bg-red-500 text-white text-[9px] font-bold w-4.5 h-4.5 flex items-center justify-center rounded-full shadow-sm">
+                <span className="absolute top-0 right-0 bg-red-500 text-white text-[9px] font-bold w-[18px] h-[18px] flex items-center justify-center rounded-full shadow-sm">
                   {wishlist.length}
                 </span>
               )}
@@ -147,60 +149,100 @@ export default function Navbar() {
 
             <button
               onClick={() => setIsMobileOpen(!isMobileOpen)}
-              className={`p-2 rounded-2xl transition-colors ${hasScrolled ? 'hover:bg-slate-100 text-slate-700' : 'hover:bg-white/20 text-white'}`}
+              className={`
+                p-2 rounded-2xl transition-colors relative w-9 h-9 flex items-center justify-center
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50
+                ${hasScrolled ? 'hover:bg-slate-100 text-slate-700' : 'hover:bg-white/20 text-white'}
+              `}
               aria-label="Toggle menu"
+              aria-expanded={isMobileOpen}
             >
-              {isMobileOpen ? (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
+              <motion.span
+                animate={{ rotate: isMobileOpen ? 45 : 0, y: isMobileOpen ? 0 : -6 }}
+                transition={{ duration: 0.25 }}
+                className="absolute w-6 h-[2.5px] rounded-full bg-current"
+              />
+              <motion.span
+                animate={{ opacity: isMobileOpen ? 0 : 1 }}
+                transition={{ duration: 0.15 }}
+                className="absolute w-6 h-[2.5px] rounded-full bg-current"
+              />
+              <motion.span
+                animate={{ rotate: isMobileOpen ? -45 : 0, y: isMobileOpen ? 0 : 6 }}
+                transition={{ duration: 0.25 }}
+                className="absolute w-6 h-[2.5px] rounded-full bg-current"
+              />
             </button>
           </div>
         </div>
       </div>
 
-      <div
-        className={`
-          md:hidden overflow-hidden glass border-t border-white/20 
-          transition-all duration-500 ease-out
-          ${isMobileOpen ? 'max-h-[420px] opacity-100' : 'max-h-0 opacity-0'}
-        `}
-      >
-        <div className="px-6 py-8 flex flex-col space-y-2">
-          {navItems.map((item) => (
-            <Link
-              key={item.name}
-              to={item.path}
-              onClick={() => setIsMobileOpen(false)}
-              className={`
-                block px-6 py-4 rounded-2xl text-lg font-medium transition-all
-                ${location.pathname === item.path
-                  ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
-                  : 'text-slate-800 hover:bg-emerald-50/50 hover:text-emerald-600'}
-              `}
-            >
-              {item.name}
-            </Link>
-          ))}
-
-          <Link
-            to="/contact"
-            onClick={() => setIsMobileOpen(false)}
-            className="
-              mt-6 mx-6 py-4 text-center rounded-2xl font-semibold text-base
-              bg-gradient-to-r from-green-600 to-emerald-700 text-white
-              shadow-lg active:scale-[0.97] transition-all
-            "
+      <AnimatePresence>
+        {isMobileOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+            className="md:hidden overflow-hidden glass border-t border-white/20"
           >
-            Contact Us
-          </Link>
-        </div>
-      </div>
+            <motion.div
+              initial="closed"
+              animate="open"
+              exit="closed"
+              variants={{
+                open: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } },
+                closed: { transition: { staggerChildren: 0.03, staggerDirection: -1 } },
+              }}
+              className="px-6 py-8 flex flex-col space-y-2"
+            >
+              {navItems.map((item) => (
+                <motion.div
+                  key={item.name}
+                  variants={{
+                    open: { opacity: 1, x: 0 },
+                    closed: { opacity: 0, x: -16 },
+                  }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <Link
+                    to={item.path}
+                    onClick={() => setIsMobileOpen(false)}
+                    className={`
+                      block px-6 py-4 rounded-2xl text-lg font-medium transition-all
+                      ${location.pathname === item.path
+                        ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
+                        : 'text-slate-800 hover:bg-emerald-50/50 hover:text-emerald-600 active:scale-[0.98]'}
+                    `}
+                  >
+                    {item.name}
+                  </Link>
+                </motion.div>
+              ))}
+
+              <motion.div
+                variants={{
+                  open: { opacity: 1, x: 0 },
+                  closed: { opacity: 0, x: -16 },
+                }}
+                transition={{ duration: 0.25 }}
+              >
+                <Link
+                  to="/contact"
+                  onClick={() => setIsMobileOpen(false)}
+                  className="
+                    mt-6 mx-6 py-4 text-center rounded-2xl font-semibold text-base
+                    bg-gradient-to-r from-green-600 to-emerald-700 text-white
+                    shadow-lg active:scale-[0.97] transition-all block
+                  "
+                >
+                  Contact Us
+                </Link>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Wishlist Drawer */}
       <AnimatePresence>
@@ -221,7 +263,7 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 h-full z-[100] bg-white shadow-2xl flex flex-col w-full md:w-96 md:max-w-md text-slate-800"
+              className="fixed right-0 top-0 h-full z-[100] bg-white shadow-2xl flex flex-col w-full sm:w-96 sm:max-w-md text-slate-800"
             >
               {/* Header */}
               <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
@@ -293,7 +335,7 @@ export default function Navbar() {
                             </span>
                             <button
                               onClick={() => toggleWishlist(trek.id)}
-                              className="text-slate-400 hover:text-red-500 p-1.5 rounded-lg hover:bg-red-55/10 transition-all cursor-pointer"
+                              className="text-slate-400 hover:text-red-500 p-1.5 rounded-lg hover:bg-red-50 transition-all cursor-pointer"
                               title="Remove from Saved"
                             >
                               <FaTrashAlt className="text-xs" />

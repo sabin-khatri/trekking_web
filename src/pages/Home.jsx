@@ -532,20 +532,15 @@ export default function Home() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  style={{ fontFamily: FONT_BODY, borderColor: `${JUNIPER}44`, color: INK }}
-                  className="flex-1 px-5 py-3.5 rounded-full border bg-white placeholder:text-slate-400 focus:outline-none focus:ring-2 transition-shadow"
+                  className="base-form-input flex-1 !rounded-full"
                 />
-                <motion.button
+                <button
                   type="submit"
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-semibold shadow-lg transition-colors duration-300"
-                  style={{ backgroundColor: SAFFRON, color: INK }}
+                  className="base-form-btn !py-3.5 !px-6"
                 >
                   <FaPaperPlane className="text-sm" />
                   Subscribe
-                </motion.button>
+                </button>
               </form>
             )}
           </motion.div>

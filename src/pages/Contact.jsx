@@ -181,15 +181,15 @@ export default function Contact() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="bg-white  p-6 sm:p-8 md:p-10 rounded-3xl shadow-2xl border border-green-100  order-1 md:order-2"
+            className="base-form-container order-1 md:order-2"
           >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-green-800  mb-8 text-center">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-8 text-center" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}>
               Send Us A Message
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-slate-700  mb-2">
+                <label htmlFor="name" className="base-form-label">
                   Full Name *
                 </label>
                 <input
@@ -199,13 +199,13 @@ export default function Contact() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3.5 border border-slate-300 rounded-xl bg-slate-50 text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                  className="base-form-input"
                   placeholder="Your Name"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-700  mb-2">
+                <label htmlFor="email" className="base-form-label">
                   Email Address *
                 </label>
                 <input
@@ -215,13 +215,13 @@ export default function Contact() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3.5 border border-slate-300 rounded-xl bg-slate-50 text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                  className="base-form-input"
                   placeholder="your@example.com"
                 />
               </div>
 
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-slate-700  mb-2">
+                <label htmlFor="subject" className="base-form-label">
                   Subject
                 </label>
                 <input
@@ -230,13 +230,13 @@ export default function Contact() {
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  className="w-full px-5 py-3.5 border border-slate-300 rounded-xl bg-slate-50 text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                  className="base-form-input"
                   placeholder="Regarding your trek..."
                 />
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-slate-700  mb-2">
+                <label htmlFor="message" className="base-form-label">
                   Message *
                 </label>
                 <textarea
@@ -246,7 +246,7 @@ export default function Contact() {
                   value={formData.message}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3.5 border border-slate-300 rounded-xl bg-slate-50 text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all resize-y min-h-[120px]"
+                  className="base-form-input resize-y min-h-[120px]"
                   placeholder="Tell us about your adventure plans..."
                 />
               </div>
@@ -255,17 +255,11 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`
-                    inline-flex items-center px-8 py-4 rounded-full text-white font-semibold text-base sm:text-lg
-                    transition-all duration-300 transform hover:scale-105 w-full sm:w-auto justify-center
-                    ${isSubmitting 
-                      ? 'bg-slate-300 text-slate-500 cursor-not-allowed' 
-                      : 'bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 shadow-xl shadow-emerald-600/30'}
-                  `}
+                  className="base-form-btn w-full sm:w-auto"
                 >
                   {isSubmitting ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
+                      <div className="w-5 h-5 border-2 border-[var(--color-ink)] border-t-transparent rounded-full animate-spin mr-3"></div>
                       Sending...
                     </>
                   ) : (

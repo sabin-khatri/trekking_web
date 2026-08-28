@@ -1,6 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react-hooks/immutability */
-// src/pages/Gallery.jsx
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { galleryData } from '../data/galleryData';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
@@ -8,14 +5,24 @@ import SEO from '../components/common/SEO';
 import { COMPANY } from '../config/company';
 import { IMAGES } from '../config/images';
 
-// Icons
-import { 
-  FaChevronLeft, 
-  FaChevronRight, 
-  FaTimes, 
-  FaImages 
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaTimes,
+  FaImages
 } from 'react-icons/fa';
 import { GiMountainRoad } from 'react-icons/gi';
+
+const INK = '#16212C';
+const PARCHMENT = '#F4EFE3';
+const PARCHMENT_DEEP = '#EAE1CB';
+const JUNIPER = '#4B6350';
+const SAFFRON = '#D99A3D';
+const CLAY = '#9C4A32';
+
+const FONT_DISPLAY = "'Fraunces', 'Georgia', serif";
+const FONT_BODY = "'Public Sans', 'Inter', sans-serif";
+const FONT_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace";
 
 export default function Gallery() {
   const [currentFilter, setCurrentFilter] = useState('all');
@@ -32,7 +39,6 @@ export default function Gallery() {
   const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   const textY = useTransform(scrollYProgress, [0, 1], ['0%', '200%']);
 
-  // Testimonial auto-slide
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTestimonial((prev) => (prev + 1) % 4);
@@ -41,7 +47,6 @@ export default function Gallery() {
     return () => clearInterval(interval);
   }, []);
 
-  // Filter logic
   useEffect(() => {
     if (currentFilter === 'all') {
       setFilteredData(galleryData);
@@ -50,7 +55,6 @@ export default function Gallery() {
     }
   }, [currentFilter]);
 
-  // Keyboard navigation for lightbox
   const closeModal = useCallback(() => {
     setSelectedImageIndex(null);
     document.body.style.overflow = '';
@@ -95,51 +99,63 @@ export default function Gallery() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50  transition-colors duration-300">
-      {/* Hero Header */}
-      <header 
+    <div style={{ backgroundColor: PARCHMENT, fontFamily: FONT_BODY }} className="min-h-screen transition-colors duration-300">
+      <SEO title="Gallery" description={`Browse photos from ${COMPANY.name} treks across Everest, Annapurna, Langtang, and beyond.`} />
+
+      <header
         ref={heroRef}
         className="relative min-h-[55vh] sm:min-h-[65vh] flex items-center justify-center text-center overflow-hidden"
+        style={{ backgroundColor: INK }}
       >
-        <motion.div 
+        <motion.div
           className="absolute inset-0"
           style={{
             backgroundImage: `url(${IMAGES.hero.gallery})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundAttachment: 'fixed',
-            y: backgroundY
+            y: backgroundY,
+            opacity: 0.55
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/70 to-black/80" />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${INK}CC 0%, ${INK}B3 55%, ${INK}F0 100%)` }} />
 
-        <motion.div 
+        <div className="absolute top-0 left-0 right-0 flex justify-between px-3 pt-3 opacity-30" aria-hidden="true">
+          {Array.from({ length: 14 }).map((_, i) => (
+            <span key={i} style={{ backgroundColor: PARCHMENT }} className="w-2.5 h-4 rounded-sm" />
+          ))}
+        </div>
+
+        <motion.div
           style={{ y: textY }}
           className="relative z-10 px-6 max-w-5xl mx-auto"
         >
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md px-6 py-2 rounded-full mb-6"
+            style={{ borderColor: `${SAFFRON}55`, fontFamily: FONT_MONO }}
+            className="inline-flex items-center gap-3 border px-5 py-2 rounded-full mb-6"
           >
-            <GiMountainRoad className="text-2xl text-emerald-300" />
-            <span className="text-emerald-200 text-sm font-medium tracking-widest">HIMALAYAN MOMENTS</span>
+            <GiMountainRoad className="text-xl" style={{ color: SAFFRON }} />
+            <span style={{ color: SAFFRON }} className="text-xs tracking-[0.25em] uppercase">Himalayan Moments</span>
           </motion.div>
 
-          <motion.h1 
-            initial={{ opacity: 0, scale: 0.9 }}
+          <motion.h1
+            initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
-            className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tighter text-white"
+            style={{ fontFamily: FONT_DISPLAY, color: PARCHMENT }}
+            className="text-5xl sm:text-6xl md:text-7xl italic font-normal tracking-tight"
           >
             Our Gallery
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="mt-4 text-xl sm:text-2xl text-white/90 max-w-2xl mx-auto"
+            className="mt-4 text-xl sm:text-2xl max-w-2xl mx-auto font-light"
+            style={{ color: '#D8D2C4' }}
           >
             Moments that take your breath away
           </motion.p>
@@ -149,7 +165,8 @@ export default function Gallery() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             href="#gallery"
-            className="mt-10 inline-flex items-center gap-3 bg-white text-slate-900 hover:bg-emerald-50 px-8 py-4 rounded-full font-semibold text-base transition-all hover:scale-105 shadow-2xl"
+            style={{ backgroundColor: SAFFRON, color: INK }}
+            className="mt-10 inline-flex items-center gap-3 px-8 py-4 rounded-full font-semibold text-base transition-all hover:scale-105 shadow-2xl"
           >
             <FaImages className="text-xl" />
             Explore the Collection
@@ -157,41 +174,42 @@ export default function Gallery() {
         </motion.div>
 
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-10">
-          <div className="w-6 h-10 border-2 border-white/60 rounded-full flex justify-center">
-            <div className="w-1 h-2 bg-white/70 rounded-full mt-2 animate-scroll-down" />
+          <div className="w-6 h-10 border-2 rounded-full flex justify-center" style={{ borderColor: `${PARCHMENT}66` }}>
+            <div className="w-1 h-2 rounded-full mt-2 animate-scroll-down" style={{ backgroundColor: `${PARCHMENT}B3` }} />
           </div>
         </div>
       </header>
 
-      {/* Gallery Section */}
-      <section id="gallery" className="py-20 lg:py-28 bg-white  transition-colors duration-300">
+      <section id="gallery" className="py-20 lg:py-28" style={{ backgroundColor: PARCHMENT }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl sm:text-5xl font-bold text-green-900  tracking-tight">
+            <p style={{ fontFamily: FONT_MONO, color: CLAY }} className="text-xs tracking-[0.2em] uppercase mb-3">
+              Contact Sheet
+            </p>
+            <h2 style={{ fontFamily: FONT_DISPLAY, color: INK }} className="text-4xl sm:text-5xl italic font-normal tracking-tight">
               Capturing the Himalayas
             </h2>
-            <p className="mt-4 text-lg text-slate-600  max-w-2xl mx-auto">
+            <p className="mt-4 text-lg max-w-2xl mx-auto" style={{ color: '#5B6660' }}>
               From towering peaks to serene valleys — every photo tells a story of adventure.
             </p>
           </motion.div>
 
-          {/* Filter Buttons */}
           <div className="flex flex-wrap justify-center gap-3 mb-12">
             {['all', 'everest', 'annapurna', 'langtang', 'other'].map((cat) => (
               <button
                 key={cat}
                 onClick={() => setCurrentFilter(cat)}
-                className={`
-                  px-7 py-3.5 rounded-2xl font-medium transition-all duration-300 text-sm sm:text-base
-                  ${currentFilter === cat
-                    ? 'bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg shadow-emerald-600/30 scale-105 border-transparent'
-                    : 'bg-white border border-slate-200 text-slate-600 hover:border-emerald-500 hover:text-emerald-600 hover:shadow-sm'}
-                `}
+                style={
+                  currentFilter === cat
+                    ? { backgroundColor: INK, color: SAFFRON, borderColor: INK }
+                    : { backgroundColor: PARCHMENT, color: INK, borderColor: `${JUNIPER}44` }
+                }
+                className="px-6 py-3 rounded-full font-medium transition-all duration-300 text-sm sm:text-base border-2 border-dashed"
               >
                 {cat === 'all' ? 'All Photos' : (
                   <>
@@ -203,19 +221,19 @@ export default function Gallery() {
             ))}
           </div>
 
-          {/* Gallery Grid */}
           <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
             <AnimatePresence mode="popLayout">
               {filteredData.map((item, index) => (
                 <motion.div
                   key={item.src}
                   layout
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0.92 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
+                  exit={{ opacity: 0, scale: 0.92 }}
                   transition={{ duration: 0.3 }}
                   onClick={() => openModal(index)}
-                  className="group relative overflow-hidden rounded-2xl shadow-md cursor-pointer hover:shadow-2xl transition-all duration-500 border border-transparent "
+                  style={{ backgroundColor: PARCHMENT_DEEP, border: `1px solid ${JUNIPER}22` }}
+                  className="group relative overflow-hidden rounded-lg shadow-sm cursor-pointer hover:shadow-xl transition-all duration-500"
                 >
                   <div className="aspect-[4/3] overflow-hidden">
                     <img
@@ -226,13 +244,26 @@ export default function Gallery() {
                     />
                   </div>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6">
-                    <h3 className="text-white text-lg font-semibold line-clamp-1">{item.alt}</h3>
-                    <p className="text-white/80 text-sm mt-1.5 line-clamp-2">{item.description}</p>
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-5"
+                    style={{ background: `linear-gradient(to top, ${INK}E6, ${INK}33 55%, transparent)` }}
+                  >
+                    <h3 style={{ fontFamily: FONT_DISPLAY, color: PARCHMENT }} className="italic text-lg line-clamp-1">{item.alt}</h3>
+                    <p style={{ color: '#D8D2C4' }} className="text-sm mt-1.5 line-clamp-2">{item.description}</p>
                   </div>
 
-                  <div className="absolute top-4 right-4 bg-black/60 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm">
-                    {item.category === 'all' ? 'Himalaya' : item.category.toUpperCase()}
+                  <div
+                    style={{ fontFamily: FONT_MONO, backgroundColor: `${INK}CC`, color: SAFFRON }}
+                    className="absolute top-3 left-3 text-[10px] px-2 py-1 rounded tracking-widest"
+                  >
+                    #{String(index + 1).padStart(3, '0')}
+                  </div>
+
+                  <div
+                    style={{ fontFamily: FONT_MONO, backgroundColor: `${INK}CC`, color: PARCHMENT }}
+                    className="absolute top-3 right-3 text-[10px] px-2.5 py-1 rounded-full tracking-wide"
+                  >
+                    {item.category === 'all' ? 'HIMALAYA' : item.category.toUpperCase()}
                   </div>
                 </motion.div>
               ))}
@@ -241,23 +272,33 @@ export default function Gallery() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-20 lg:py-28 bg-gradient-to-b from-green-50 to-white   transition-colors duration-300">
+      <section className="py-20 lg:py-28" style={{ backgroundColor: PARCHMENT_DEEP }}>
         <div className="max-w-5xl mx-auto px-6 text-center">
-          <motion.h2 
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            style={{ fontFamily: FONT_MONO, color: CLAY }}
+            className="text-xs tracking-[0.2em] uppercase mb-3"
+          >
+            Postcards Home
+          </motion.p>
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl sm:text-5xl font-bold text-green-900  mb-4"
+            style={{ fontFamily: FONT_DISPLAY, color: INK }}
+            className="text-4xl sm:text-5xl italic font-normal mb-4"
           >
             Voices from the Trail
           </motion.h2>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-slate-600  mb-12"
+            className="mb-12"
+            style={{ color: '#5B6660' }}
           >
             Real stories from real trekkers
           </motion.p>
@@ -272,11 +313,11 @@ export default function Gallery() {
                 transition={{ duration: 0.5 }}
                 className="absolute inset-0 flex flex-col justify-center items-center px-6"
               >
-                <div className="max-w-3xl">
-                  <p className="text-xl sm:text-2xl italic leading-relaxed text-slate-700 ">
-                    “{testimonials[currentTestimonial].text}”
+                <div className="max-w-3xl rounded-xl p-8 sm:p-10" style={{ backgroundColor: PARCHMENT, border: `1px dashed ${JUNIPER}44` }}>
+                  <p style={{ fontFamily: FONT_DISPLAY, color: INK }} className="text-xl sm:text-2xl italic leading-relaxed">
+                    "{testimonials[currentTestimonial].text}"
                   </p>
-                  <div className="mt-8 text-green-700  font-medium">
+                  <div style={{ fontFamily: FONT_MONO, color: JUNIPER }} className="mt-8 text-sm tracking-wide">
                     — {testimonials[currentTestimonial].author}
                   </div>
                 </div>
@@ -286,53 +327,60 @@ export default function Gallery() {
         </div>
       </section>
 
-      {/* Lightbox Modal */}
       <AnimatePresence>
         {selectedImageIndex !== null && selectedImage && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+            style={{ backgroundColor: `${INK}F2` }}
             onClick={closeModal}
           >
             <button
               onClick={closeModal}
-              className="absolute top-6 right-6 text-white bg-black/50 hover:bg-red-600 w-14 h-14 rounded-full flex items-center justify-center transition-all z-10"
+              style={{ backgroundColor: `${PARCHMENT}22`, color: PARCHMENT }}
+              className="absolute top-6 right-6 w-14 h-14 rounded-full flex items-center justify-center transition-all z-10 hover:opacity-80"
             >
-              <FaTimes className="text-3xl" />
+              <FaTimes className="text-2xl" />
             </button>
 
             <button
               onClick={(e) => { e.stopPropagation(); prevImage(); }}
-              className="absolute left-6 top-1/2 -translate-y-1/2 text-white bg-black/50 hover:bg-green-700 w-14 h-14 rounded-full flex items-center justify-center transition-all"
+              style={{ backgroundColor: `${PARCHMENT}22`, color: PARCHMENT }}
+              className="absolute left-6 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full flex items-center justify-center transition-all hover:opacity-80"
             >
-              <FaChevronLeft className="text-3xl" />
+              <FaChevronLeft className="text-2xl" />
             </button>
 
             <button
               onClick={(e) => { e.stopPropagation(); nextImage(); }}
-              className="absolute right-6 top-1/2 -translate-y-1/2 text-white bg-black/50 hover:bg-green-700 w-14 h-14 rounded-full flex items-center justify-center transition-all"
+              style={{ backgroundColor: `${PARCHMENT}22`, color: PARCHMENT }}
+              className="absolute right-6 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full flex items-center justify-center transition-all hover:opacity-80"
             >
-              <FaChevronRight className="text-3xl" />
+              <FaChevronRight className="text-2xl" />
             </button>
 
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
+            <motion.div
+              initial={{ scale: 0.94, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
+              exit={{ scale: 0.94, opacity: 0 }}
               className="relative w-full max-w-5xl max-h-[90vh] flex items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
-              <img
-                src={selectedImage.src}
-                alt={selectedImage.alt}
-                className="max-h-[85vh] w-auto rounded-2xl shadow-2xl object-contain"
-              />
-
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-8 rounded-b-2xl">
-                <h3 className="text-white text-2xl sm:text-3xl font-bold">{selectedImage.alt}</h3>
-                <p className="text-white/80 mt-2 text-base sm:text-lg">{selectedImage.description}</p>
+              <div className="relative rounded-lg overflow-hidden shadow-2xl" style={{ backgroundColor: PARCHMENT, padding: '14px 14px 90px' }}>
+                <img
+                  src={selectedImage.src}
+                  alt={selectedImage.alt}
+                  className="max-h-[70vh] w-auto object-contain"
+                />
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <p style={{ fontFamily: FONT_MONO, color: CLAY }} className="text-[11px] tracking-widest mb-2">
+                    FRAME #{String(selectedImageIndex + 1).padStart(3, '0')} — {selectedImage.category === 'all' ? 'HIMALAYA' : selectedImage.category.toUpperCase()}
+                  </p>
+                  <h3 style={{ fontFamily: FONT_DISPLAY, color: INK }} className="text-xl sm:text-2xl italic">{selectedImage.alt}</h3>
+                  <p style={{ color: '#5B6660' }} className="mt-2 text-sm sm:text-base">{selectedImage.description}</p>
+                </div>
               </div>
             </motion.div>
           </motion.div>

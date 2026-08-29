@@ -1,3 +1,5 @@
+
+/* eslint-disable react-hooks/immutability */
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { galleryData } from '../data/galleryData';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';

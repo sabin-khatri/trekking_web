@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { treks } from '../data/treks';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
@@ -202,7 +203,7 @@ export default function Packages() {
         <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${INK}D9 0%, ${INK}88 50%, ${INK}F5 100%)` }} />
 
         <div
-          className="absolute top-8 left-1/2 -translate-x-1/2 rotate-[-3deg] border-2 rounded px-4 py-1.5"
+          className="absolute top-28 sm:top-32 left-1/2 -translate-x-1/2 rotate-[-3deg] border-2 rounded px-4 py-1.5 z-10 sm:z-20"
           style={{ borderColor: SAFFRON }}
         >
           <span style={{ fontFamily: FONT_MONO, color: SAFFRON }} className="text-[11px] tracking-[0.3em] uppercase">
@@ -657,7 +658,7 @@ export default function Packages() {
         transition={{ type: 'spring', stiffness: 400, damping: 18 }}
         onClick={() => setShowCartModal(true)}
         style={{ backgroundColor: INK, color: SAFFRON }}
-        className="fixed bottom-24 right-6 sm:bottom-28 sm:right-8 p-5 sm:p-6 rounded-full shadow-2xl transition-shadow z-40"
+        className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 p-5 sm:p-6 rounded-full shadow-2xl transition-shadow z-40"
         aria-label="Open cart"
       >
         <BsCart className="text-2xl sm:text-3xl" />

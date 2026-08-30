@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-// src/components/Navbar.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
@@ -8,6 +6,17 @@ import { IMAGES } from '../config/images';
 import { useWishlist } from './WishlistContext';
 import { treks } from '../data/treks';
 import { FaHeart, FaRegHeart, FaTrashAlt, FaTimes } from 'react-icons/fa';
+
+const INK = '#16212C';
+const PARCHMENT = '#F4EFE3';
+const PARCHMENT_DEEP = '#EAE1CB';
+const JUNIPER = '#4B6350';
+const SAFFRON = '#D99A3D';
+const CLAY = '#9C4A32';
+
+const FONT_DISPLAY = "'Fraunces', 'Georgia', serif";
+const FONT_BODY = "'Public Sans', 'Inter', sans-serif";
+const FONT_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace";
 
 export default function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -23,7 +32,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Lock body scroll when wishlist drawer or mobile menu is open
   useEffect(() => {
     if (isWishlistOpen || isMobileOpen) {
       document.body.style.overflow = 'hidden';
@@ -45,30 +53,28 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`
-        fixed top-0 left-0 right-0 transition-all duration-500 ease-out
-        ${isWishlistOpen ? 'z-[9999]' : 'z-50'}
-        ${hasScrolled 
-          ? 'bg-white/95 backdrop-blur-md shadow-md py-3' 
-          : 'bg-transparent py-5'}
-      `}
+      style={{
+        backgroundColor: hasScrolled ? `${INK}F2` : 'transparent',
+        backdropFilter: hasScrolled ? 'blur(10px)' : 'none',
+        boxShadow: hasScrolled ? '0 4px 24px rgba(22,33,44,0.25)' : 'none',
+        fontFamily: FONT_BODY
+      }}
+      className={`fixed top-0 left-0 right-0 transition-all duration-500 ease-out ${isWishlistOpen ? 'z-[9999]' : 'z-50'} ${hasScrolled ? 'py-3' : 'py-5'}`}
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
           <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
-            <img 
-              src={IMAGES.logo} 
+            <img
+              src={IMAGES.logo}
               alt={`${COMPANY.name} Logo`}
-              className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3"
+              className="h-9 w-9 sm:h-10 sm:w-10 rounded-lg transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3"
             />
             <div>
-              <span className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tighter
-                               bg-gradient-to-r from-green-700 via-emerald-600 to-green-500 
-                               bg-clip-text text-transparent">
+              <span style={{ fontFamily: FONT_DISPLAY, color: PARCHMENT }} className="text-xl sm:text-2xl md:text-3xl italic font-normal tracking-tight">
                 {COMPANY.shortName}
               </span>
-              <p className="hidden sm:block text-[10px] text-slate-500 -mt-1 tracking-[2px] font-medium">
+              <p style={{ fontFamily: FONT_MONO, color: SAFFRON }} className="hidden sm:block text-[9px] -mt-1 tracking-[3px] font-medium">
                 {COMPANY.tagline}
               </p>
             </div>
@@ -79,18 +85,18 @@ export default function Navbar() {
               <Link
                 key={item.name}
                 to={item.path}
-                className={`
-                  relative font-semibold text-sm lg:text-[15px] whitespace-nowrap transition-all duration-300
-                  group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 rounded-md
-                  ${hasScrolled ? 'text-slate-800 hover:text-emerald-600' : 'text-white/90 hover:text-white'}
-                  ${location.pathname === item.path ? (hasScrolled ? 'text-emerald-600' : 'text-white') : ''}
-                `}
+                style={{
+                  fontFamily: FONT_MONO,
+                  color: location.pathname === item.path ? SAFFRON : `${PARCHMENT}CC`
+                }}
+                className="relative text-xs lg:text-[13px] uppercase tracking-widest whitespace-nowrap transition-all duration-300 group focus-visible:outline-none rounded-md hover:opacity-80"
               >
                 {item.name}
                 {location.pathname === item.path && (
                   <motion.span
                     layoutId="underline"
-                    className="absolute -bottom-1.5 left-0 h-[2px] w-full bg-gradient-to-r from-emerald-500 to-green-500"
+                    style={{ backgroundColor: SAFFRON }}
+                    className="absolute -bottom-1.5 left-0 h-[2px] w-full"
                   />
                 )}
               </Link>
@@ -98,17 +104,13 @@ export default function Navbar() {
 
             <button
               onClick={() => setIsWishlistOpen(true)}
-              className={`
-                relative p-2.5 rounded-xl transition-all duration-300 flex items-center justify-center
-                hover:scale-105 active:scale-95 hover:bg-slate-100/10
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50
-                ${hasScrolled ? 'text-slate-700 hover:text-emerald-600 hover:bg-slate-100' : 'text-white/90 hover:text-white'}
-              `}
+              style={{ color: PARCHMENT }}
+              className="relative p-2.5 rounded-lg transition-all duration-300 flex items-center justify-center hover:scale-105 active:scale-95 hover:opacity-80 focus-visible:outline-none"
               aria-label="Wishlist"
             >
-              <FaHeart className={wishlist.length > 0 ? "text-red-500 animate-pulse" : "text-current"} size={20} />
+              <FaHeart style={wishlist.length > 0 ? { color: CLAY } : {}} size={19} />
               {wishlist.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full shadow-md">
+                <span style={{ fontFamily: FONT_MONO, backgroundColor: SAFFRON, color: INK }} className="absolute -top-1 -right-1 text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full shadow-md">
                   {wishlist.length}
                 </span>
               )}
@@ -116,15 +118,8 @@ export default function Navbar() {
 
             <Link
               to="/contact"
-              className="
-                px-5 lg:px-7 py-2.5 rounded-2xl font-semibold text-sm tracking-wide whitespace-nowrap
-                bg-gradient-to-r from-emerald-600 to-green-600 text-white
-                shadow-lg shadow-emerald-600/30 
-                hover:shadow-xl hover:shadow-emerald-600/40
-                hover:-translate-y-0.5 active:scale-95
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50
-                transition-all duration-300
-              "
+              style={{ backgroundColor: SAFFRON, color: INK }}
+              className="px-5 lg:px-7 py-2.5 rounded-full font-semibold text-sm tracking-wide whitespace-nowrap shadow-lg hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none transition-all duration-300"
             >
               Contact Us
             </Link>
@@ -133,16 +128,13 @@ export default function Navbar() {
           <div className="flex items-center gap-2 sm:gap-4 md:hidden">
             <button
               onClick={() => setIsWishlistOpen(true)}
-              className={`
-                relative p-2.5 rounded-xl transition-all duration-300 flex items-center justify-center
-                active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50
-                ${hasScrolled ? 'text-slate-700 hover:text-emerald-600 hover:bg-slate-100' : 'text-white/90 hover:bg-white/10'}
-              `}
+              style={{ color: PARCHMENT }}
+              className="relative p-2.5 rounded-lg transition-all duration-300 flex items-center justify-center active:scale-95 focus-visible:outline-none"
               aria-label="Wishlist"
             >
-              <FaHeart className={wishlist.length > 0 ? "text-red-500" : "text-current"} size={22} />
+              <FaHeart style={wishlist.length > 0 ? { color: CLAY } : {}} size={22} />
               {wishlist.length > 0 && (
-                <span className="absolute top-0 right-0 bg-red-500 text-white text-[9px] font-bold w-[18px] h-[18px] flex items-center justify-center rounded-full shadow-sm">
+                <span style={{ fontFamily: FONT_MONO, backgroundColor: SAFFRON, color: INK }} className="absolute top-0 right-0 text-[9px] font-bold w-[18px] h-[18px] flex items-center justify-center rounded-full shadow-sm">
                   {wishlist.length}
                 </span>
               )}
@@ -150,11 +142,8 @@ export default function Navbar() {
 
             <button
               onClick={() => setIsMobileOpen(!isMobileOpen)}
-              className={`
-                p-2 rounded-2xl transition-colors relative w-9 h-9 flex items-center justify-center
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50
-                ${hasScrolled ? 'hover:bg-slate-100 text-slate-700' : 'hover:bg-white/20 text-white'}
-              `}
+              style={{ color: PARCHMENT }}
+              className="p-2 rounded-lg transition-colors relative w-9 h-9 flex items-center justify-center focus-visible:outline-none"
               aria-label="Toggle menu"
               aria-expanded={isMobileOpen}
             >
@@ -185,7 +174,8 @@ export default function Navbar() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-            className="md:hidden overflow-hidden glass border-t border-white/20"
+            style={{ backgroundColor: `${INK}F7`, borderTop: `1px solid ${SAFFRON}22` }}
+            className="md:hidden overflow-hidden"
           >
             <motion.div
               initial="closed"
@@ -209,12 +199,12 @@ export default function Navbar() {
                   <Link
                     to={item.path}
                     onClick={() => setIsMobileOpen(false)}
-                    className={`
-                      block px-6 py-4 rounded-2xl text-lg font-medium transition-all
-                      ${location.pathname === item.path
-                        ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
-                        : 'text-slate-800 hover:bg-emerald-50/50 hover:text-emerald-600 active:scale-[0.98]'}
-                    `}
+                    style={
+                      location.pathname === item.path
+                        ? { backgroundColor: `${SAFFRON}1A`, color: SAFFRON, fontWeight: 600 }
+                        : { color: PARCHMENT }
+                    }
+                    className="block px-6 py-4 rounded-xl text-lg font-medium transition-all active:scale-[0.98]"
                   >
                     {item.name}
                   </Link>
@@ -231,11 +221,8 @@ export default function Navbar() {
                 <Link
                   to="/contact"
                   onClick={() => setIsMobileOpen(false)}
-                  className="
-                    mt-6 mx-6 py-4 text-center rounded-2xl font-semibold text-base
-                    bg-gradient-to-r from-green-600 to-emerald-700 text-white
-                    shadow-lg active:scale-[0.97] transition-all block
-                  "
+                  style={{ backgroundColor: SAFFRON, color: INK }}
+                  className="mt-6 mx-6 py-4 text-center rounded-xl font-semibold text-base shadow-lg active:scale-[0.97] transition-all block"
                 >
                   Contact Us
                 </Link>
@@ -245,60 +232,59 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Wishlist Drawer */}
       <AnimatePresence>
         {isWishlistOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsWishlistOpen(false)}
-              className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+              style={{ backgroundColor: `${INK}99` }}
+              className="fixed inset-0 z-50 backdrop-blur-sm"
             />
 
-            {/* Drawer Container */}
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 h-full z-[100] bg-white shadow-2xl flex flex-col w-full sm:w-96 sm:max-w-md text-slate-800"
+              style={{ backgroundColor: PARCHMENT, fontFamily: FONT_BODY, color: INK }}
+              className="fixed right-0 top-0 h-full z-[100] shadow-2xl flex flex-col w-full sm:w-96 sm:max-w-md"
             >
-              {/* Header */}
-              <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+              <div style={{ backgroundColor: PARCHMENT_DEEP, borderBottom: `1px dashed ${JUNIPER}44` }} className="p-6 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <FaHeart className="text-red-500 text-xl" />
-                  <h2 className="text-xl font-bold text-slate-900">My Saved Treks</h2>
-                  <span className="bg-red-100 text-red-700 text-xs px-2.5 py-0.5 rounded-full font-semibold">
+                  <FaHeart style={{ color: CLAY }} className="text-xl" />
+                  <h2 style={{ fontFamily: FONT_DISPLAY, color: INK }} className="text-xl italic">My Saved Treks</h2>
+                  <span style={{ fontFamily: FONT_MONO, backgroundColor: `${CLAY}14`, color: CLAY }} className="text-xs px-2.5 py-0.5 rounded-full font-semibold">
                     {wishlist.length}
                   </span>
                 </div>
                 <button
                   onClick={() => setIsWishlistOpen(false)}
-                  className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 transition-all cursor-pointer"
+                  style={{ color: '#5B6660' }}
+                  className="p-2 rounded-lg hover:opacity-70 transition-all cursor-pointer"
                   aria-label="Close Wishlist"
                 >
                   <FaTimes className="text-lg" />
                 </button>
               </div>
 
-              {/* Saved Treks List */}
               <div className="flex-1 overflow-y-auto p-6 space-y-4">
                 {wishlist.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-center p-4">
-                    <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4">
+                    <div style={{ backgroundColor: `${CLAY}12`, color: CLAY }} className="w-16 h-16 rounded-full flex items-center justify-center mb-4">
                       <FaRegHeart className="text-3xl animate-pulse" />
                     </div>
-                    <h3 className="text-lg font-semibold text-slate-800">Your wishlist is empty</h3>
-                    <p className="text-sm text-slate-500 mt-2 max-w-[240px] mx-auto">
+                    <h3 style={{ fontFamily: FONT_DISPLAY, color: INK }} className="text-lg italic">Your wishlist is empty</h3>
+                    <p className="text-sm mt-2 max-w-[240px] mx-auto" style={{ color: '#5B6660' }}>
                       Explore our trekking packages and tap the heart icon to save them for later!
                     </p>
                     <Link
                       to="/packages"
                       onClick={() => setIsWishlistOpen(false)}
-                      className="mt-6 px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-green-600 text-white rounded-xl font-semibold text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md"
+                      style={{ backgroundColor: INK, color: SAFFRON }}
+                      className="mt-6 px-6 py-2.5 rounded-lg font-semibold text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md"
                     >
                       Browse Packages
                     </Link>
@@ -310,9 +296,10 @@ export default function Navbar() {
                     return (
                       <div
                         key={trek.id}
-                        className="flex gap-4 p-3 rounded-2xl border border-slate-100 hover:border-emerald-100 bg-white hover:shadow-md transition-all group"
+                        style={{ backgroundColor: PARCHMENT_DEEP, border: `1px solid ${JUNIPER}22` }}
+                        className="flex gap-4 p-3 rounded-xl hover:shadow-md transition-all group"
                       >
-                        <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 relative bg-slate-100 border border-slate-100">
+                        <div style={{ backgroundColor: PARCHMENT, border: `1px solid ${JUNIPER}22` }} className="w-20 h-20 rounded-lg overflow-hidden shrink-0 relative">
                           <img
                             src={trek.image}
                             alt={trek.name}
@@ -324,19 +311,21 @@ export default function Navbar() {
                             <Link
                               to={`/packages/${trek.id}`}
                               onClick={() => setIsWishlistOpen(false)}
-                              className="font-bold text-slate-800 hover:text-emerald-600 text-base line-clamp-1 block"
+                              style={{ fontFamily: FONT_DISPLAY, color: INK }}
+                              className="italic text-base line-clamp-1 block hover:opacity-70"
                             >
                               {trek.name}
                             </Link>
-                            <span className="text-xs text-slate-500">{trek.location}</span>
+                            <span style={{ fontFamily: FONT_MONO, color: '#5B6660' }} className="text-xs">{trek.location}</span>
                           </div>
                           <div className="flex justify-between items-end mt-2">
-                            <span className="text-emerald-700 font-bold text-sm">
+                            <span style={{ fontFamily: FONT_MONO, color: CLAY }} className="font-bold text-sm">
                               Rs. {trek.price.toLocaleString()}
                             </span>
                             <button
                               onClick={() => toggleWishlist(trek.id)}
-                              className="text-slate-400 hover:text-red-500 p-1.5 rounded-lg hover:bg-red-50 transition-all cursor-pointer"
+                              style={{ color: '#8A8272' }}
+                              className="p-1.5 rounded-lg hover:opacity-70 transition-all cursor-pointer"
                               title="Remove from Saved"
                             >
                               <FaTrashAlt className="text-xs" />
@@ -349,24 +338,25 @@ export default function Navbar() {
                 )}
               </div>
 
-              {/* Footer */}
               {wishlist.length > 0 && (
-                <div className="p-6 border-t border-slate-100 bg-slate-50 space-y-3">
-                  <div className="flex justify-between text-sm text-slate-600">
+                <div style={{ backgroundColor: PARCHMENT_DEEP, borderTop: `1px dashed ${JUNIPER}44` }} className="p-6 space-y-3">
+                  <div className="flex justify-between text-sm" style={{ color: '#5B6660' }}>
                     <span>Saved treks</span>
-                    <span className="font-semibold">{wishlist.length} Items</span>
+                    <span style={{ fontFamily: FONT_MONO, color: INK }} className="font-semibold">{wishlist.length} Items</span>
                   </div>
                   <div className="flex gap-3">
                     <button
                       onClick={clearWishlist}
-                      className="flex-1 py-3 border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 active:scale-95 transition-all cursor-pointer bg-white"
+                      style={{ backgroundColor: PARCHMENT, borderColor: `${JUNIPER}44`, color: '#5B6660' }}
+                      className="flex-1 py-3 border rounded-lg text-sm font-semibold active:scale-95 transition-all cursor-pointer"
                     >
                       Clear All
                     </button>
                     <Link
                       to="/packages"
                       onClick={() => setIsWishlistOpen(false)}
-                      className="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-green-600 text-white rounded-xl text-sm font-semibold text-center hover:scale-[1.02] active:scale-95 transition-all shadow-md"
+                      style={{ backgroundColor: INK, color: SAFFRON }}
+                      className="flex-1 py-3 rounded-lg text-sm font-semibold text-center hover:scale-[1.02] active:scale-95 transition-all shadow-md"
                     >
                       View Packages
                     </Link>

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useToast } from '../components/ToastContext';

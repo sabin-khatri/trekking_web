@@ -11,12 +11,12 @@ const emptyForm = {
 
 const Field = ({ label, children }) => (
   <div>
-    <label className="block text-xs font-medium text-slate-500 mb-1.5">{label}</label>
+    <label className="base-form-label">{label}</label>
     {children}
   </div>
 );
 
-const inputClass = "w-full px-3 py-2.5 text-sm rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500";
+const inputClass = "base-form-input !px-3 !py-2.5 !text-sm";
 
 export default function PackageFormModal({ open, initialData, onClose, onSave }) {
   const [form, setForm] = useState(emptyForm);
@@ -51,12 +51,13 @@ export default function PackageFormModal({ open, initialData, onClose, onSave })
           exit={{ opacity: 0, y: 20, scale: 0.97 }}
           transition={{ duration: 0.2, ease: 'easeOut' }}
           onClick={(e) => e.stopPropagation()}
-          className="bg-white rounded-2xl shadow-xl w-full max-w-xl max-h-[90vh] overflow-y-auto"
+          className="w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-xl"
+          style={{ backgroundColor: 'var(--color-parchment-deep)', border: '1px solid color-mix(in srgb, var(--color-juniper) 20%, transparent)' }}
         >
           <form onSubmit={handleSubmit}>
             {/* Header */}
-            <div className="flex items-center justify-between px-6 sm:px-8 py-6 border-b border-slate-100">
-              <h2 className="text-lg font-bold text-slate-800">
+            <div className="flex items-center justify-between px-6 sm:px-8 py-6 border-b" style={{ borderColor: 'color-mix(in srgb, var(--color-juniper) 15%, transparent)' }}>
+              <h2 className="text-lg font-bold" style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-display)' }}>
                 {initialData ? 'Edit Trek Package' : 'Add Trek Package'}
               </h2>
               <button type="button" onClick={onClose} className="text-slate-400 hover:text-slate-700 transition-colors">
@@ -116,17 +117,18 @@ export default function PackageFormModal({ open, initialData, onClose, onSave })
             </div>
 
             {/* Footer */}
-            <div className="px-6 sm:px-8 py-5 bg-slate-50 rounded-b-2xl flex justify-end gap-3">
+            <div className="px-6 sm:px-8 py-5 rounded-b-2xl flex justify-end gap-3" style={{ backgroundColor: 'var(--color-parchment)' }}>
               <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors"
+                className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors"
+                style={{ color: 'var(--color-ink)' }}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors"
+                className="base-form-btn !py-2.5 !px-5 !text-sm"
               >
                 {initialData ? 'Save Changes' : 'Add Package'}
               </button>

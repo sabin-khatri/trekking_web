@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 
 /* eslint-disable react-hooks/immutability */
 import React, { useState, useEffect, useCallback, useRef } from 'react';

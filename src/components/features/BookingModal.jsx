@@ -242,7 +242,8 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
             initial={{ opacity: 0, scale: 0.95, y: 15 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 15 }}
-            className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[92vh]"
+            className="relative w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[92vh]"
+            style={{ backgroundColor: 'var(--color-parchment-deep)', border: '1px solid color-mix(in srgb, var(--color-juniper) 20%, transparent)' }}
           >
             {/* Header */}
             <div className="bg-slate-950 px-6 py-4 flex justify-between items-center text-white border-b border-slate-800">
@@ -308,13 +309,13 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
                   {/* STEP 1: CONFIRM TREK */}
                   {currentStep === 1 && (
                     <div className="space-y-4">
-                      <h3 className="text-lg font-bold text-slate-800">Select Trek Package</h3>
+                      <h3 className="text-lg font-bold" style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-display)' }}>Select Trek Package</h3>
                       <div>
-                        <label className="block text-sm font-medium text-slate-600 mb-1.5">Selected Trek</label>
+                        <label className="base-form-label">Selected Trek</label>
                         <select
                           value={selectedTrek ? selectedTrek.name : ''}
                           onChange={handleTrekChange}
-                          className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-medium text-slate-800"
+                          className="base-form-input"
                         >
                           {treks.map((t) => (
                             <option key={t.name} value={t.name}>{t.name} ({t.location})</option>
@@ -323,12 +324,12 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
                       </div>
 
                       {selectedTrek && (
-                        <div className="p-4 bg-emerald-50/60 border border-emerald-100 rounded-2xl flex flex-col md:flex-row gap-4 items-start md:items-center">
+                        <div className="p-4 rounded-2xl flex flex-col md:flex-row gap-4 items-start md:items-center" style={{ backgroundColor: 'var(--color-parchment)', border: '1px solid color-mix(in srgb, var(--color-juniper) 20%, transparent)' }}>
                           <img src={selectedTrek.image} alt={selectedTrek.name} className="w-full md:w-28 h-20 object-cover rounded-xl shrink-0" />
                           <div className="space-y-1">
-                            <h4 className="font-bold text-slate-800 text-lg">{selectedTrek.name}</h4>
-                            <p className="text-sm text-slate-500 line-clamp-1">{selectedTrek.description}</p>
-                            <div className="flex gap-4 text-xs font-semibold text-slate-600 mt-1">
+                            <h4 className="font-bold text-lg" style={{ color: 'var(--color-ink)' }}>{selectedTrek.name}</h4>
+                            <p className="text-sm line-clamp-1" style={{ color: 'var(--color-ink)' }}>{selectedTrek.description}</p>
+                            <div className="flex gap-4 text-xs font-semibold mt-1" style={{ color: 'var(--color-ink)' }}>
                               <span>📍 {selectedTrek.location}</span>
                               <span>⏱️ {selectedTrek.duration} Days</span>
                               <span>🗻 {selectedTrek.maxAltitude || 'N/A'}</span>
@@ -349,12 +350,12 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
                   {/* STEP 2: DATES & GROUP SIZE */}
                   {currentStep === 2 && (
                     <div className="space-y-5">
-                      <h3 className="text-lg font-bold text-slate-800">Preferred Dates & Travelers</h3>
+                      <h3 className="text-lg font-bold" style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-display)' }}>Preferred Dates & Travelers</h3>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
-                            <Calendar size={16} className="text-emerald-600" /> Start Date
+                          <label className="base-form-label flex items-center gap-1.5">
+                            <Calendar size={16} style={{ color: 'var(--color-juniper)' }} /> Start Date
                           </label>
                           <input
                             required
@@ -363,13 +364,13 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
                             min={new Date().toISOString().split('T')[0]}
                             value={formData.startDate}
                             onChange={handleDataChange}
-                            className="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-slate-800"
+                            className="base-form-input"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
-                            <Users size={16} className="text-emerald-600" /> Number of Travelers
+                          <label className="base-form-label flex items-center gap-1.5">
+                            <Users size={16} style={{ color: 'var(--color-juniper)' }} /> Number of Travelers
                           </label>
                           <input
                             required
@@ -379,13 +380,13 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
                             name="travelers"
                             value={formData.travelers}
                             onChange={handleDataChange}
-                            className="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-slate-800"
+                            className="base-form-input"
                           />
                         </div>
                       </div>
 
                       {/* Pricing feedback / discounts */}
-                      <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
+                      <div className="p-4 rounded-2xl border space-y-2" style={{ backgroundColor: 'var(--color-parchment)', borderColor: 'color-mix(in srgb, var(--color-juniper) 15%, transparent)' }}>
                         <div className="flex justify-between text-sm text-slate-600">
                           <span>Base rate per person:</span>
                           <span className="font-semibold text-slate-800">Rs. {basePricePerPerson.toLocaleString()}</span>
@@ -454,11 +455,11 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
                   {/* STEP 4: CONTACT & PERSONAL INFO */}
                   {currentStep === 4 && (
                     <div className="space-y-4">
-                      <h3 className="text-lg font-bold text-slate-800">Your Contact Details</h3>
+                      <h3 className="text-lg font-bold" style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-display)' }}>Your Contact Details</h3>
 
                       <div className="space-y-3.5">
                         <div>
-                          <label className="block text-sm font-medium text-slate-600 mb-1">Full Name</label>
+                          <label className="base-form-label">Full Name</label>
                           <input
                             required
                             type="text"
@@ -466,13 +467,13 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
                             value={formData.name}
                             onChange={handleDataChange}
                             placeholder="e.g. John Doe"
-                            className="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-slate-800"
+                            className="base-form-input"
                           />
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-sm font-medium text-slate-600 mb-1">Email Address</label>
+                            <label className="base-form-label">Email Address</label>
                             <input
                               required
                               type="email"
@@ -480,11 +481,11 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
                               value={formData.email}
                               onChange={handleDataChange}
                               placeholder="name@example.com"
-                              className="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-slate-800"
+                              className="base-form-input"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-slate-600 mb-1">Phone Number</label>
+                            <label className="base-form-label">Phone Number</label>
                             <input
                               required
                               type="tel"
@@ -492,20 +493,20 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
                               value={formData.phone}
                               onChange={handleDataChange}
                               placeholder="e.g. +977 980..."
-                              className="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-slate-800"
+                              className="base-form-input"
                             />
                           </div>
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-slate-600 mb-1">Special Requirements / Message</label>
+                          <label className="base-form-label">Special Requirements / Message</label>
                           <textarea
                             name="message"
                             rows="3"
                             value={formData.message}
                             onChange={handleDataChange}
                             placeholder="Dietary requests, medical conditions, or any custom additions..."
-                            className="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all resize-none text-slate-800"
+                            className="base-form-input resize-none"
                           />
                         </div>
                       </div>
@@ -613,12 +614,13 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
             </div>
 
             {/* Footer Navigation */}
-            <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between shrink-0">
+            <div className="px-6 py-4 border-t flex items-center justify-between shrink-0" style={{ backgroundColor: 'var(--color-parchment)', borderColor: 'color-mix(in srgb, var(--color-juniper) 15%, transparent)' }}>
               <button
                 type="button"
                 onClick={goToPrev}
                 disabled={currentStep === 1 || isSubmitting}
-                className="flex items-center gap-1.5 px-4 py-2 border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-semibold"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-semibold"
+                style={{ color: 'var(--color-juniper)' }}
               >
                 <ChevronLeft size={16} /> Back
               </button>
@@ -627,7 +629,7 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
                 <button
                   type="button"
                   onClick={goToNext}
-                  className="flex items-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-green-600 text-white rounded-xl shadow-md hover:brightness-110 hover:shadow-lg transition-all text-sm font-semibold"
+                  className="base-form-btn !py-2.5 !px-5"
                 >
                   Continue <ChevronRight size={16} />
                 </button>
@@ -636,7 +638,7 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
                   type="button"
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className="flex items-center justify-center min-w-[140px] px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-green-600 text-white rounded-xl shadow-md hover:brightness-110 hover:shadow-lg disabled:brightness-90 disabled:cursor-not-allowed transition-all text-sm font-bold"
+                  className="base-form-btn !py-2.5 !px-6 min-w-[140px]"
                 >
                   {isSubmitting ? 'Processing Booking...' : 'Confirm & Request Booking'}
                 </button>

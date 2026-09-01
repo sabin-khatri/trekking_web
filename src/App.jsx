@@ -19,13 +19,7 @@ const Gallery = React.lazy(() => import('./pages/Gallery'));
 const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
-function ScrollToTop() {
-  const { pathname } = useLocation();
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [pathname]);
-  return null;
-}
+
 
 const PageWrapper = ({ children }) => (
   <motion.div
@@ -39,7 +33,7 @@ const PageWrapper = ({ children }) => (
 );
 
 const LoadingSpinner = () => (
-  <div className="min-h-[60vh] flex items-center justify-center">
+  <div className="flex-grow flex items-center justify-center min-h-[70vh]">
     <div className="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
   </div>
 );
@@ -50,12 +44,11 @@ export default function App() {
   return (
     <div className="flex min-h-screen flex-col font-sans">
       <ScrollProgress />
-      <ScrollToTop />
       <Navbar />
 
-      <main className="flex-grow">
+      <main className="flex-grow flex flex-col">
         <Suspense fallback={<LoadingSpinner />}>
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
               <Route path="/about" element={<PageWrapper><About /></PageWrapper>} />

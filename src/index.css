@@ -54,7 +54,64 @@
   --color-teal-900: #1e3a8a;
   --color-teal-950: #172554;
 
+  /* Trekking Theme Base Colors */
+  --color-ink: #16212C;
+  --color-parchment: #F4EFE3;
+  --color-parchment-deep: #EAE1CB;
+  --color-juniper: #4B6350;
+  --color-saffron: #D99A3D;
+  --color-clay: #9C4A32;
+  --color-ice: #6E93A3;
+
+  --font-display: 'Fraunces', 'Georgia', serif;
+  --font-body: 'Public Sans', 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+
   --font-sans: 'Outfit', 'Inter', sans-serif;
+}
+
+@layer components {
+  .base-form-container {
+    @apply p-6 sm:p-8 md:p-10 rounded-2xl md:rounded-3xl shadow-xl transition-all duration-300;
+    background-color: var(--color-parchment-deep);
+    border: 1px solid color-mix(in srgb, var(--color-juniper) 15%, transparent);
+  }
+
+  .base-form-label {
+    @apply block text-sm font-semibold mb-2;
+    font-family: var(--font-body);
+    color: var(--color-ink);
+  }
+
+  .base-form-input {
+    @apply w-full px-5 py-3.5 rounded-xl border bg-white placeholder:text-slate-400 focus:outline-none transition-shadow;
+    font-family: var(--font-body);
+    color: var(--color-ink);
+    border-color: color-mix(in srgb, var(--color-juniper) 25%, transparent);
+  }
+
+  .base-form-input:focus {
+    border-color: var(--color-juniper);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-juniper) 20%, transparent);
+  }
+
+  .base-form-btn {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-semibold shadow-lg transition-all duration-300 transform hover:scale-105;
+    background-color: var(--color-saffron);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+  }
+
+  .base-form-btn:hover {
+    filter: brightness(1.05);
+    box-shadow: 0 10px 25px -5px color-mix(in srgb, var(--color-saffron) 40%, transparent);
+  }
+  
+  .base-form-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
 }
 
 @layer base {

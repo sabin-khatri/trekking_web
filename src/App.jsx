@@ -18,6 +18,8 @@ const Contact = React.lazy(() => import('./pages/Contact'));
 const Gallery = React.lazy(() => import('./pages/Gallery'));
 const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
+const Login = React.lazy(() => import('./pages/Login'));
+const Signup = React.lazy(() => import('./pages/Signup'));
 
 
 
@@ -57,6 +59,8 @@ export default function App() {
               <Route path="/planner" element={<PageWrapper><Planner /></PageWrapper>} />
               <Route path="/gallery" element={<PageWrapper><Gallery /></PageWrapper>} />
               <Route path="/contact" element={<PageWrapper><Contact /></PageWrapper>} />
+              <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
+              <Route path="/signup" element={<PageWrapper><Signup /></PageWrapper>} />
               <Route path="/admin" element={<PageWrapper><AdminDashboard /></PageWrapper>} />
               <Route path="*" element={<PageWrapper><NotFound /></PageWrapper>} />
             </Routes>

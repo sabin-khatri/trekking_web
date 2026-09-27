@@ -117,6 +117,14 @@ export default function Navbar() {
             </button>
 
             <Link
+              to="/login"
+              style={{ color: PARCHMENT, border: `1px solid ${PARCHMENT}44` }}
+              className="px-5 lg:px-6 py-2 rounded-full font-semibold text-sm tracking-wide whitespace-nowrap hover:bg-white/10 active:scale-95 focus-visible:outline-none transition-all duration-300"
+            >
+              Log In
+            </Link>
+
+            <Link
               to="/contact"
               style={{ backgroundColor: SAFFRON, color: INK }}
               className="px-5 lg:px-7 py-2.5 rounded-full font-semibold text-sm tracking-wide whitespace-nowrap shadow-lg hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none transition-all duration-300"
@@ -210,6 +218,23 @@ export default function Navbar() {
                   </Link>
                 </motion.div>
               ))}
+
+              <motion.div
+                variants={{
+                  open: { opacity: 1, x: 0 },
+                  closed: { opacity: 0, x: -16 },
+                }}
+                transition={{ duration: 0.25 }}
+              >
+                <Link
+                  to="/login"
+                  onClick={() => setIsMobileOpen(false)}
+                  style={{ backgroundColor: `${PARCHMENT}22`, color: PARCHMENT }}
+                  className="mt-6 mx-6 py-4 text-center rounded-xl font-semibold text-base transition-all block"
+                >
+                  Log In
+                </Link>
+              </motion.div>
 
               <motion.div
                 variants={{

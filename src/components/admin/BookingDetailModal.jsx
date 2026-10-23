@@ -8,7 +8,7 @@ import {
 import StatusBadge from './StatusBadge';
 import DetailRow from './Detailrow';
 
-export default function BookingDetailModal({ booking, onClose }) {
+export default function BookingDetailModal({ booking, onClose, onStatusChange }) {
   if (!booking) return null;
 
   return (
@@ -106,12 +106,12 @@ export default function BookingDetailModal({ booking, onClose }) {
               Close
             </button>
             {booking.status === 'pending' && (
-              <button className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors">
+              <button onClick={() => onStatusChange(booking, 'confirmed')} className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors">
                 Confirm Booking
               </button>
             )}
             {booking.status !== 'cancelled' && (
-              <button className="px-5 py-2.5 rounded-xl text-sm font-semibold text-red-600 border border-red-200 hover:bg-red-50 transition-colors">
+              <button onClick={() => onStatusChange(booking, 'cancelled')} className="px-5 py-2.5 rounded-xl text-sm font-semibold text-red-600 border border-red-200 hover:bg-red-50 transition-colors">
                 Cancel Booking
               </button>
             )}

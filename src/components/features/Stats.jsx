@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { motion, useInView, animate } from 'motion/react';
 import { Users, Mountain, Award, Map } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { COMPANY } from '../../config/company';
 
 const stats = [
   { label: 'Happy Trekkers', value: 5000, suffix: '+', icon: Users, milestone: true },
-  { label: 'Years Experience', value: 15, suffix: '+', icon: Award },
+  { label: 'Years Experience', value: Number.parseInt(COMPANY.stats.years, 10), suffix: '+', icon: Award },
   { label: 'Trekking Routes', value: 50, suffix: '+', icon: Map },
   { label: 'Highest Alt (m)', value: 5545, suffix: '', icon: Mountain, milestone: true },
 ];

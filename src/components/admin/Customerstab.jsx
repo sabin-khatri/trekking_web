@@ -2,12 +2,11 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Search } from 'lucide-react';
-import dummyCustomers from '../../data/Dummycustomers';
 
-export default function CustomersTab({ onSelectCustomer }) {
+export default function CustomersTab({ customers, onSelectCustomer }) {
   const [query, setQuery] = useState('');
 
-  const filtered = dummyCustomers.filter((c) =>
+  const filtered = customers.filter((c) =>
     c.name.toLowerCase().includes(query.toLowerCase()) ||
     c.email.toLowerCase().includes(query.toLowerCase())
   );

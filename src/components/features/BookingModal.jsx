@@ -200,7 +200,12 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
       onClose();
       navigate('/packages');
     } catch (error) {
-      addToast('Failed to submit booking. Please try again.', 'error');
+      addToast(
+        error.message?.includes('not configured')
+          ? 'Online booking is not connected yet. Please use WhatsApp to send your request.'
+          : 'Your booking request could not be sent. Please try again or contact us on WhatsApp.',
+        'error'
+      );
     } finally {
       setIsSubmitting(false);
     }

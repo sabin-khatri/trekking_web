@@ -1,14 +1,33 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { Plus, Pencil, Trash2, MapPin, Clock, Users, Mountain } from 'lucide-react';
 import dummyPackages from '../../data/Dummypackages';
 import PackageFormModal from './Packageformmodal';
 
+const STORAGE_KEY = 'apex-admin-packages';
+
+const loadPackages = () => {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : dummyPackages;
+  } catch {
+    return dummyPackages;
+  }
+};
+
 export default function PackagesTab() {
-  const [packages, setPackages] = useState(dummyPackages);
+  const [packages, setPackages] = useState(loadPackages);
   const [formOpen, setFormOpen] = useState(false);
   const [editingPackage, setEditingPackage] = useState(null);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(packages));
+    } catch {
+      // Keep the current session usable if browser storage is unavailable.
+    }
+  }, [packages]);
 
   const openAddForm = () => {
     setEditingPackage(null);
@@ -28,7 +47,7 @@ export default function PackagesTab() {
     if (editingPackage) {
       setPackages((prev) => prev.map((p) => (p.id === editingPackage.id ? { ...p, ...form } : p)));
     } else {
-      const newPackage = { ...form, id: `PKG-${String(packages.length + 1).padStart(2, '0')}` };
+      const newPackage = { ...form, id: `PKG-${Date.now()}` };
       setPackages((prev) => [newPackage, ...prev]);
     }
     setFormOpen(false);
@@ -36,6 +55,9 @@ export default function PackagesTab() {
 
   return (
     <div className="p-6">
+      <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+        Demo data is saved in this browser only. Connect the admin API before using this dashboard for company operations.
+      </div>
       <div className="flex items-center justify-between mb-6">
         <p className="text-sm text-slate-500">{packages.length} trek packages</p>
         <button

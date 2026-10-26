@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { treks } from '../data/treks';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { useToast } from '../components/ToastContext';
@@ -52,16 +52,45 @@ const FONT_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace";
 
 export default function Packages() {
   const [currentPage, setCurrentPage] = useState(1);
+  const previousPage = useRef(currentPage);
   const [currentFilter, setCurrentFilter] = useState('all');
   const [currentSort, setCurrentSort] = useState('default');
   const [currentSearch, setCurrentSearch] = useState('');
-  const [cart, setCart] = useState(null);
+  const [cart, setCart] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('apex-trek-cart') || 'null');
+    } catch {
+      return null;
+    }
+  });
   const [showCartModal, setShowCartModal] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
 
   const { addToast } = useToast();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (previousPage.current !== currentPage) {
+      const resultsTop = document.getElementById('trek-results')?.getBoundingClientRect().top;
+      if (resultsTop !== undefined) {
+        window.scrollTo({
+          top: Math.max(0, window.scrollY + resultsTop - 112),
+          behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        });
+      }
+      previousPage.current = currentPage;
+    }
+  }, [currentPage, prefersReducedMotion]);
+
+  React.useEffect(() => {
+    try {
+      if (cart) localStorage.setItem('apex-trek-cart', JSON.stringify(cart));
+      else localStorage.removeItem('apex-trek-cart');
+    } catch {
+      // Cart remains available for this session if browser storage is unavailable.
+    }
+  }, [cart]);
 
   const itemsPerPage = 6;
 
@@ -353,7 +382,7 @@ export default function Packages() {
             ))}
           </div>
 
-          <div style={{ fontFamily: FONT_MONO, color: '#5B6660' }} className="mt-6 text-center text-sm sm:text-base">
+          <div id="trek-results" style={{ fontFamily: FONT_MONO, color: '#5B6660' }} className="mt-6 text-center text-sm sm:text-base scroll-mt-28">
             SHOWING <span style={{ color: CLAY }} className="font-bold">{filteredTreks.length}</span> ROUTES
           </div>
 
@@ -658,7 +687,7 @@ export default function Packages() {
         transition={{ type: 'spring', stiffness: 400, damping: 18 }}
         onClick={() => setShowCartModal(true)}
         style={{ backgroundColor: INK, color: SAFFRON }}
-        className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 p-5 sm:p-6 rounded-full shadow-2xl transition-shadow z-40"
+        className="fixed bottom-24 right-6 sm:bottom-28 sm:right-8 p-5 sm:p-6 rounded-full shadow-2xl transition-shadow z-40"
         aria-label="Open cart"
       >
         <BsCart className="text-2xl sm:text-3xl" />

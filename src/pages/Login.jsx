@@ -1,40 +1,48 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaLock, FaEnvelope, FaArrowLeft } from 'react-icons/fa';
 import SEO from '../components/common/SEO';
+import { signInAdmin } from '../services/adminAuth';
+import { isSupabaseConfigured } from '../services/supabase';
 
 const INK = '#16212C';
 const PARCHMENT = '#F4EFE3';
 const PARCHMENT_DEEP = '#EAE1CB';
 const JUNIPER = '#4B6350';
 const SAFFRON = '#D99A3D';
-const CLAY = '#9C4A32';
 
 const FONT_DISPLAY = "'Fraunces', 'Georgia', serif";
 const FONT_BODY = "'Public Sans', 'Inter', sans-serif";
 const FONT_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     setIsSubmitting(true);
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      await signInAdmin(formData.email, formData.password);
       setIsSubmitting(false);
-      // alert('Login logic here');
-    }, 1500);
+      navigate('/admin', { replace: true });
+    } catch (loginError) {
+      setError(loginError.message || 'Unable to sign in. Please try again.');
+      setIsSubmitting(false);
+    }
   };
 
   const inputStyle = {
@@ -74,9 +82,16 @@ export default function Login() {
           <div className="absolute -top-3 right-8 w-6 h-6 rounded-full" style={{ backgroundColor: PARCHMENT }} aria-hidden="true" />
 
           <div className="text-center mb-8">
-            <h1 style={{ fontFamily: FONT_DISPLAY, color: INK }} className="text-3xl italic mb-2">Welcome Back</h1>
-            <p style={{ color: '#5B6660', fontFamily: FONT_BODY }} className="text-sm">Enter your credentials to continue your adventure.</p>
+            <h1 style={{ fontFamily: FONT_DISPLAY, color: INK }} className="text-3xl italic mb-2">Admin Sign In</h1>
+            <p style={{ color: '#5B6660', fontFamily: FONT_BODY }} className="text-sm">Sign in with your authorized company account.</p>
           </div>
+
+          {!isSupabaseConfigured && (
+            <p role="status" className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+              Admin login needs Supabase configuration. See <code>.env.example</code> and <code>supabase/schema.sql</code>.
+            </p>
+          )}
+          {error && <p role="alert" className="mb-5 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800">{error}</p>}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -89,6 +104,7 @@ export default function Login() {
                 </span>
                 <input
                   type="email"
+                  autoComplete="username"
                   id="email"
                   name="email"
                   value={formData.email}
@@ -111,6 +127,7 @@ export default function Login() {
                 </span>
                 <input
                   type="password"
+                  autoComplete="current-password"
                   id="password"
                   name="password"
                   value={formData.password}
@@ -123,15 +140,9 @@ export default function Login() {
               </div>
             </div>
 
-            <div className="flex items-center justify-end">
-              <Link to="/forgot-password" style={{ fontFamily: FONT_MONO, color: CLAY }} className="text-xs font-semibold hover:underline">
-                Forgot Password?
-              </Link>
-            </div>
-
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !isSupabaseConfigured}
               style={{ backgroundColor: INK, color: SAFFRON }}
               className="w-full py-4 rounded-lg font-semibold text-base shadow-lg transition-all hover:scale-[1.02] disabled:opacity-70 disabled:hover:scale-100 flex items-center justify-center"
             >
@@ -142,14 +153,7 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p style={{ color: '#5B6660', fontFamily: FONT_BODY }} className="text-sm">
-              Don't have an account?{' '}
-              <Link to="/signup" style={{ fontFamily: FONT_MONO, color: JUNIPER }} className="font-bold hover:underline">
-                Sign Up
-              </Link>
-            </p>
-          </div>
+          <p className="mt-6 text-center text-xs text-slate-500">Admin accounts are created and authorized by the company.</p>
         </motion.div>
       </div>
     </div>

@@ -99,7 +99,7 @@ export default function AdminDashboard() {
         <div className="max-w-7xl mx-auto relative z-10">
           <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">Dashboard</h1>
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <p className="text-slate-300 mt-2 font-light">Booking requests from your Supabase database.</p>
+            <p className="text-slate-300 mt-2 font-light">Booking requests from your PostgreSQL database.</p>
             <button onClick={handleSignOut} className="rounded-xl border border-white/20 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10">Sign out</button>
           </div>
         </div>

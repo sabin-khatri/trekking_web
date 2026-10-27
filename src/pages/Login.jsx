@@ -5,7 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaLock, FaEnvelope, FaArrowLeft } from 'react-icons/fa';
 import SEO from '../components/common/SEO';
 import { signInAdmin } from '../services/adminAuth';
-import { isSupabaseConfigured } from '../services/supabase';
 
 const INK = '#16212C';
 const PARCHMENT = '#F4EFE3';
@@ -86,11 +85,6 @@ export default function Login() {
             <p style={{ color: '#5B6660', fontFamily: FONT_BODY }} className="text-sm">Sign in with your authorized company account.</p>
           </div>
 
-          {!isSupabaseConfigured && (
-            <p role="status" className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
-              Admin login needs Supabase configuration. See <code>.env.example</code> and <code>supabase/schema.sql</code>.
-            </p>
-          )}
           {error && <p role="alert" className="mb-5 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800">{error}</p>}
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -142,7 +136,7 @@ export default function Login() {
 
             <button
               type="submit"
-              disabled={isSubmitting || !isSupabaseConfigured}
+              disabled={isSubmitting}
               style={{ backgroundColor: INK, color: SAFFRON }}
               className="w-full py-4 rounded-lg font-semibold text-base shadow-lg transition-all hover:scale-[1.02] disabled:opacity-70 disabled:hover:scale-100 flex items-center justify-center"
             >

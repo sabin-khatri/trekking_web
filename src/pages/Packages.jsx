@@ -65,6 +65,7 @@ export default function Packages() {
   });
   const [showCartModal, setShowCartModal] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
+  const cartDialogRef = useRef(null);
 
   const { addToast } = useToast();
   const { toggleWishlist, isInWishlist } = useWishlist();
@@ -91,6 +92,42 @@ export default function Packages() {
       // Cart remains available for this session if browser storage is unavailable.
     }
   }, [cart]);
+
+  useEffect(() => {
+    if (!showCartModal) return undefined;
+    const previouslyFocused = document.activeElement;
+    cartDialogRef.current?.focus();
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setShowCartModal(false);
+        return;
+      }
+
+      if (event.key === 'Tab' && cartDialogRef.current) {
+        const focusable = cartDialogRef.current.querySelectorAll('button:not([disabled]), a[href]');
+        if (focusable.length === 0) {
+          event.preventDefault();
+          cartDialogRef.current.focus();
+          return;
+        }
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      previouslyFocused?.focus?.();
+    };
+  }, [showCartModal]);
 
   const itemsPerPage = 6;
 
@@ -122,7 +159,8 @@ export default function Packages() {
 
   const filteredTreks = getFilteredTreks();
   const totalPages = Math.ceil(filteredTreks.length / itemsPerPage);
-  const start = (currentPage - 1) * itemsPerPage;
+  const safeCurrentPage = Math.min(currentPage, Math.max(totalPages, 1));
+  const start = (safeCurrentPage - 1) * itemsPerPage;
   const paginatedTreks = filteredTreks.slice(start, start + itemsPerPage);
 
   const addToCart = (trek) => {
@@ -449,7 +487,7 @@ export default function Packages() {
                         }}
                         style={{ backgroundColor: `${PARCHMENT}EE`, color: isInWishlist(trek.id) ? CLAY : JUNIPER }}
                         className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center shadow-md transition-colors cursor-pointer"
-                        aria-label="Add to Wishlist"
+                        aria-label={isInWishlist(trek.id) ? `Remove ${trek.name} from wishlist` : `Add ${trek.name} to wishlist`}
                       >
                         <FaHeart className={isInWishlist(trek.id) ? 'scale-110' : ''} />
                       </motion.button>
@@ -605,6 +643,11 @@ export default function Packages() {
               transition={{ duration: 0.3, ease: EASE }}
               className="rounded-xl p-6 sm:p-8 max-w-lg w-full relative"
               style={{ backgroundColor: PARCHMENT }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="packages-cart-title"
+              tabIndex={-1}
+              ref={cartDialogRef}
               onClick={(e) => e.stopPropagation()}
             >
               <div
@@ -619,11 +662,11 @@ export default function Packages() {
               />
 
               <div className="flex justify-between items-center mb-6 pb-6" style={{ borderBottom: `1px dashed ${JUNIPER}44` }}>
-                <h3 style={{ fontFamily: FONT_DISPLAY, color: INK }} className="text-2xl sm:text-3xl italic flex items-center gap-3">
+                <h3 id="packages-cart-title" style={{ fontFamily: FONT_DISPLAY, color: INK }} className="text-2xl sm:text-3xl italic flex items-center gap-3">
                   <BsCartCheck style={{ color: JUNIPER }} className="text-3xl" />
                   Your Cart
                 </h3>
-                <button onClick={() => setShowCartModal(false)} style={{ color: '#5B6660' }} className="text-3xl leading-none hover:opacity-70 transition-opacity">
+                <button aria-label="Close cart" onClick={() => setShowCartModal(false)} style={{ color: '#5B6660' }} className="text-3xl leading-none hover:opacity-70 transition-opacity">
                   ×
                 </button>
               </div>
@@ -657,15 +700,25 @@ export default function Packages() {
                 <div style={{ fontFamily: FONT_MONO, color: INK }} className="text-lg sm:text-xl font-semibold w-full sm:w-auto text-center sm:text-left">
                   TOTAL: <span style={{ color: CLAY }}>Rs. {cart ? cart.price.toLocaleString() : '0'}</span>
                 </div>
-                <div className="flex gap-4 w-full sm:w-auto">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
                   {cart && (
-                    <button
-                      onClick={clearCart}
-                      style={{ backgroundColor: CLAY, color: PARCHMENT }}
-                      className="flex-1 px-6 py-3 rounded-lg transition-opacity hover:opacity-90 text-base sm:text-lg"
-                    >
-                      Clear Cart
-                    </button>
+                    <>
+                      <button
+                        onClick={clearCart}
+                        style={{ backgroundColor: CLAY, color: PARCHMENT }}
+                        className="flex-1 px-6 py-3 rounded-lg transition-opacity hover:opacity-90 text-base sm:text-lg"
+                      >
+                        Clear Cart
+                      </button>
+                      {(() => {
+                        const trek = treks.find((item) => item.name === cart.name);
+                        return trek ? (
+                          <Link to={`/packages/${trek.id}?book=1`} onClick={() => setShowCartModal(false)} style={{ backgroundColor: JUNIPER, color: PARCHMENT }} className="flex-1 px-6 py-3 rounded-lg text-center transition-opacity hover:opacity-90 text-base sm:text-lg">
+                            Continue to booking
+                          </Link>
+                        ) : null;
+                      })()}
+                    </>
                   )}
                   <button
                     onClick={() => setShowCartModal(false)}

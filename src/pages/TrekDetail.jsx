@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useTrek } from '../hooks/useTreks';
 import BookingModal from '../components/features/BookingModal';
@@ -11,9 +11,16 @@ import { useWishlist } from '../components/WishlistContext';
 
 export default function TrekDetail() {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const { trek, loading, error } = useTrek(id);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const { toggleWishlist, isInWishlist } = useWishlist();
+
+  useEffect(() => {
+    if (!loading && trek && searchParams.get('book') === '1') {
+      setIsBookingOpen(true);
+    }
+  }, [loading, trek, searchParams]);
 
   if (loading) {
     return (

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Mail, Phone, MapPin, Calendar, DollarSign, Mountain } from 'lucide-react';

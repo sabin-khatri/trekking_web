@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Search } from 'lucide-react';

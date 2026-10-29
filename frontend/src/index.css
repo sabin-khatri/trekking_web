@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Slate - Cool gray for mountain rocks and snow shadows */
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+  --color-slate-950: #020617;
+
+  /* Green - Lush, vibrant green for the Hilly Regions */
+  --color-green-50: #ecfdf5;
+  --color-green-100: #d1fae5;
+  --color-green-200: #a7f3d0;
+  --color-green-300: #6ee7b7;
+  --color-green-400: #34d399;
+  --color-green-500: #10b981; /* Lush hill green */
+  --color-green-600: #059669;
+  --color-green-700: #047857;
+  --color-green-800: #065f46;
+  --color-green-900: #064e3b;
+  --color-green-950: #022c22;
+
+  /* Emerald - Icy Glacier Blue/Cyan for the Himalayas */
+  --color-emerald-50: #ecfeff;
+  --color-emerald-100: #cffafe;
+  --color-emerald-200: #a5f3fc;
+  --color-emerald-300: #67e8f9;
+  --color-emerald-400: #22d3ee;
+  --color-emerald-500: #06b6d4; /* Glacier cyan */
+  --color-emerald-600: #0891b2;
+  --color-emerald-700: #0e7490;
+  --color-emerald-800: #155e75;
+  --color-emerald-900: #164e63;
+  --color-emerald-950: #083344;
+  
+  /* Teal - Deep Alpine Lake Blue */
+  --color-teal-50: #eff6ff;
+  --color-teal-100: #dbeafe;
+  --color-teal-200: #bfdbfe;
+  --color-teal-300: #93c5fd;
+  --color-teal-400: #60a5fa;
+  --color-teal-500: #3b82f6;
+  --color-teal-600: #2563eb;
+  --color-teal-700: #1d4ed8;
+  --color-teal-800: #1e40af;
+  --color-teal-900: #1e3a8a;
+  --color-teal-950: #172554;
+
+  /* Trekking Theme Base Colors */
+  --color-ink: #16212C;
+  --color-parchment: #F4EFE3;
+  --color-parchment-deep: #EAE1CB;
+  --color-juniper: #4B6350;
+  --color-saffron: #D99A3D;
+  --color-clay: #9C4A32;
+  --color-ice: #6E93A3;
+
+  --font-display: 'Fraunces', 'Georgia', serif;
+  --font-body: 'Public Sans', 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+
+  --font-sans: 'Outfit', 'Inter', sans-serif;
+}
+
+@layer components {
+  .base-form-container {
+    @apply p-6 sm:p-8 md:p-10 rounded-2xl md:rounded-3xl shadow-xl transition-all duration-300;
+    background-color: var(--color-parchment-deep);
+    border: 1px solid color-mix(in srgb, var(--color-juniper) 15%, transparent);
+  }
+
+  .base-form-label {
+    @apply block text-sm font-semibold mb-2;
+    font-family: var(--font-body);
+    color: var(--color-ink);
+  }
+
+  .base-form-input {
+    @apply w-full px-5 py-3.5 rounded-xl border bg-white placeholder:text-slate-400 focus:outline-none transition-shadow;
+    font-family: var(--font-body);
+    color: var(--color-ink);
+    border-color: color-mix(in srgb, var(--color-juniper) 25%, transparent);
+  }
+
+  .base-form-input:focus {
+    border-color: var(--color-juniper);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-juniper) 20%, transparent);
+  }
+
+  .base-form-btn {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-semibold shadow-lg transition-all duration-300 transform hover:scale-105;
+    background-color: var(--color-saffron);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+  }
+
+  .base-form-btn:hover {
+    filter: brightness(1.05);
+    box-shadow: 0 10px 25px -5px color-mix(in srgb, var(--color-saffron) 40%, transparent);
+  }
+  
+  .base-form-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-slate-50 text-slate-800 antialiased font-sans selection:bg-emerald-500 selection:text-white overflow-x-hidden;
+  }
+
+  :focus-visible {
+    outline: 3px solid #d99a3d;
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #10b981;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #059669;
+  }
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 10000;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: #f4efe3;
+  color: #16212c;
+  font-weight: 700;
+  transform: translateY(-160%);
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/40 shadow-[0_8px_30px_rgb(0,0,0,0.04)];
+  }
+  .glass-dark {
+    @apply bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)];
+  }
+  .text-gradient {
+    @apply bg-gradient-to-r from-emerald-500 to-teal-400 bg-clip-text text-transparent;
+  }
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}

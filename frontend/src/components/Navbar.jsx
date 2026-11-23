@@ -47,6 +47,7 @@ export default function Navbar() {
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
     { name: 'Packages', path: '/packages' },
+    { name: 'Track Booking', path: '/booking-status' },
     { name: 'Trek Planner', path: '/planner' },
     { name: 'Gallery', path: '/gallery' },
   ];

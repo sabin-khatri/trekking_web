@@ -31,6 +31,7 @@ import InteractiveMap from '../components/features/InteractiveMap';
 import Stats from '../components/features/Stats';
 import { COMPANY } from '../config/company';
 import { IMAGES } from '../config/images';
+import { useTreks } from '../hooks/useTreks';
 
 const EASE = [0.22, 1, 0.36, 1];
 const VIEWPORT = { once: true, margin: '-80px' };
@@ -47,6 +48,7 @@ const FONT_BODY = "'Public Sans', 'Inter', sans-serif";
 const FONT_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace";
 
 export default function Home() {
+  const { treks: availableTreks } = useTreks();
   const heroRef = useRef(null);
   const prefersReducedMotion = useReducedMotion();
 
@@ -77,11 +79,17 @@ export default function Home() {
     { icon: <FaLeaf />, title: 'Eco-Conscious', desc: 'Sustainable and community-focused.' }
   ];
 
-  const treksList = [
-    { img: IMAGES.treks.everest, slug: 'everest-base-camp', name: 'Everest Base Camp', desc: '14 days to the foot of the world\'s highest peak.', level: 'Challenging', alt: '5,364 m' },
-    { img: IMAGES.treks.annapurna, slug: 'annapurna-circuit', name: 'Annapurna Circuit', desc: 'Diverse landscapes from subtropical forests to high-altitude deserts.', level: 'Challenging', alt: '5,416 m' },
-    { img: IMAGES.treks.langtang, slug: 'langtang-valley', name: 'Langtang Valley', desc: 'A peaceful, less-crowded trail with stunning views and rich Tamang culture.', level: 'Moderate', alt: '3,870 m' }
-  ];
+  const featuredTreks = availableTreks.filter((trek) => trek.featured);
+  const treksList = (featuredTreks.length ? featuredTreks : availableTreks)
+    .sort((first, second) => new Date(second.updated_at || second.created_at || 0) - new Date(first.updated_at || first.created_at || 0))
+    .slice(0, 3).map((trek) => ({
+    img: trek.image,
+    slug: trek.id,
+    name: trek.name,
+    desc: trek.description,
+    level: trek.category,
+    alt: trek.maxAltitude || 'Altitude varies',
+  }));
 
   const process = [
     { icon: <FaCompass />, title: 'Tell Us Your Dream', desc: 'Share your fitness level, dates, and dream destination — we match you to the right trek.' },
@@ -431,7 +439,7 @@ export default function Home() {
                     style={{ fontFamily: FONT_MONO, backgroundColor: `${INK}CC`, color: SAFFRON }}
                     className="absolute top-3 right-3 text-[11px] tracking-widest px-2 py-1 rounded"
                   >
-                    {trek.alt} ASL
+                    {trek.alt !== 'Altitude varies' && `${trek.alt} ASL`}
                   </span>
                 </div>
                 <div className="p-6">

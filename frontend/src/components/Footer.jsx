@@ -19,6 +19,7 @@ export default function Footer() {
     { name: "Home", path: "/" },
     { name: "About Us", path: "/about" },
     { name: "Our Treks", path: "/packages" },
+    { name: "Track Booking", path: "/booking-status" },
     { name: "Gallery", path: "/gallery" },
     { name: "Contact Us", path: "/contact" },
   ];

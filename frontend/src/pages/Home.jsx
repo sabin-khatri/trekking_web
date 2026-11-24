@@ -32,6 +32,7 @@ import Stats from '../components/features/Stats';
 import { COMPANY } from '../config/company';
 import { IMAGES } from '../config/images';
 import { useTreks } from '../hooks/useTreks';
+import { subscribeToNewsletter } from '../services/api';
 
 const EASE = [0.22, 1, 0.36, 1];
 const VIEWPORT = { once: true, margin: '-80px' };
@@ -64,12 +65,22 @@ export default function Home() {
 
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [newsletterLoading, setNewsletterLoading] = useState(false);
+  const [newsletterError, setNewsletterError] = useState('');
 
-  const handleNewsletterSubmit = (e) => {
+  const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
-    if (!email.trim()) return;
-    setSubscribed(true);
-    setEmail('');
+    setNewsletterError('');
+    setNewsletterLoading(true);
+    try {
+      await subscribeToNewsletter(email.trim());
+      setSubscribed(true);
+      setEmail('');
+    } catch (error) {
+      setNewsletterError(error.message || 'Subscription failed. Please try again.');
+    } finally {
+      setNewsletterLoading(false);
+    }
   };
 
   const features = [
@@ -544,22 +555,26 @@ export default function Home() {
                 className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto"
               >
                 <input
+                  aria-label="Email address for monthly trek updates"
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   className="base-form-input flex-1 !rounded-full"
+                  disabled={newsletterLoading}
                 />
                 <button
                   type="submit"
                   className="base-form-btn !py-3.5 !px-6"
+                  disabled={newsletterLoading}
                 >
                   <FaPaperPlane className="text-sm" />
-                  Subscribe
+                  {newsletterLoading ? 'Subscribing…' : 'Subscribe'}
                 </button>
               </form>
             )}
+            {newsletterError && <p role="alert" className="mx-auto mt-3 max-w-lg text-sm text-red-700">{newsletterError}</p>}
           </motion.div>
         </div>
       </section>

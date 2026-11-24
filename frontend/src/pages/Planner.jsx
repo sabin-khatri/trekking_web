@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import {
@@ -11,7 +11,8 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import SEO from '../components/common/SEO';
-import { treks } from '../data/treks';
+import { treks as fallbackTreks } from '../data/treks';
+import { useTreks } from '../hooks/useTreks';
 import BookingModal from '../components/features/BookingModal';
 import { useWishlist } from '../components/WishlistContext';
 
@@ -27,9 +28,9 @@ const FONT_DISPLAY = "'Fraunces', 'Georgia', serif";
 const FONT_BODY = "'Public Sans', 'Inter', sans-serif";
 const FONT_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace";
 
-const getPackingItems = (trekId, season) => {
-  const trek = treks.find(t => t.id === trekId) || treks[0];
-  const altitudeNum = parseInt(trek.maxAltitude.replace(/,/g, ''), 10) || 3000;
+const getPackingItems = (trekId, season, trekList = fallbackTreks) => {
+  const trek = trekList.find(t => t.id === trekId) || trekList[0];
+  const altitudeNum = parseInt(String(trek?.maxAltitude || '').replace(/,/g, ''), 10) || 3000;
 
   const categories = {
     essentials: [
@@ -111,6 +112,8 @@ const getPackingItems = (trekId, season) => {
 export default function Planner() {
   const [activeTab, setActiveTab] = useState('wizard');
   const { wishlist } = useWishlist();
+  const { treks: loadedTreks } = useTreks();
+  const treks = loadedTreks.length ? loadedTreks : fallbackTreks;
 
   const [wizardStep, setWizardStep] = useState(0);
   const [selections, setSelections] = useState({
@@ -135,6 +138,16 @@ export default function Planner() {
 
   const [compareTrekIds, setCompareTrekIds] = useState(treks.map(t => t.id));
   const [compareMetric, setCompareMetric] = useState('altitude');
+
+  useEffect(() => {
+    if (!treks.length) return;
+    if (!treks.some((trek) => trek.id === calcTrekId)) setCalcTrekId(treks[0].id);
+    if (!treks.some((trek) => trek.id === packingTrekId)) setPackingTrekId(treks[0].id);
+    setCompareTrekIds((current) => {
+      const valid = current.filter((id) => treks.some((trek) => trek.id === id));
+      return valid.length ? valid : treks.map((trek) => trek.id);
+    });
+  }, [treks, calcTrekId, packingTrekId]);
 
   const calcTrek = treks.find(t => t.id === calcTrekId) || treks[0];
   const calcBasePrice = calcTrek.price;
@@ -258,7 +271,7 @@ export default function Planner() {
     const trek = treks.find(t => t.id === packingTrekId) || treks[0];
     const key = `packing_${packingTrekId}_${selectedSeason}`;
     const checked = getStoredChecked(key);
-    const categories = getPackingItems(packingTrekId, selectedSeason);
+    const categories = getPackingItems(packingTrekId, selectedSeason, treks);
 
     let txt = `==========================================\n`;
     txt += `🏔️ APEX HIMALAYA TREKS - PACKING LIST\n`;
@@ -1089,7 +1102,7 @@ export default function Planner() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8" style={{ borderTop: `1px dashed ${JUNIPER}33` }}>
-                {Object.entries(getPackingItems(packingTrekId, selectedSeason)).map(([catName, items]) => {
+                {Object.entries(getPackingItems(packingTrekId, selectedSeason, treks)).map(([catName, items]) => {
                   const checklistKey = `packing_${packingTrekId}_${selectedSeason}`;
                   const checkedList = getStoredChecked(checklistKey);
                   if (items.length === 0) return null;

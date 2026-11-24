@@ -147,7 +147,7 @@ export default function TrekDetail() {
                 </li>
                 <li className="flex justify-between items-center py-3 border-b border-slate-100">
                   <span className="text-slate-600">Group Size</span>
-                  <span className="font-semibold text-slate-800">2-12 Pax</span>
+                  <span className="font-semibold text-slate-800">Up to {trek.maxGroupSize || 12} Pax</span>
                 </li>
               </ul>
               

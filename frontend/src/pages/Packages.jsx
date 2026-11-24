@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { treks } from '../data/treks';
+import { useTreks } from '../hooks/useTreks';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { useToast } from '../components/ToastContext';
 import { Link } from 'react-router-dom';
@@ -50,6 +50,7 @@ const FONT_BODY = "'Public Sans', 'Inter', sans-serif";
 const FONT_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace";
 
 export default function Packages() {
+  const { treks, loading: treksLoading, error: treksError } = useTreks();
   const [currentPage, setCurrentPage] = useState(1);
   const previousPage = useRef(currentPage);
   const [currentFilter, setCurrentFilter] = useState('all');
@@ -428,7 +429,11 @@ export default function Packages() {
             className={`mt-10 grid gap-6 sm:gap-8 ${viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}
           >
             <AnimatePresence mode="popLayout">
-              {paginatedTreks.length === 0 ? (
+              {treksLoading ? (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="col-span-full rounded-2xl border border-slate-200 bg-white/70 py-16 text-center text-slate-600">Loading available treks…</motion.div>
+              ) : treksError ? (
+                <motion.div role="alert" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="col-span-full rounded-2xl border border-rose-200 bg-rose-50 py-12 text-center text-rose-800">{treksError}</motion.div>
+              ) : paginatedTreks.length === 0 ? (
                 <motion.div
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                   className="col-span-full text-center py-16"

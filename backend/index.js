@@ -1,107 +1,154 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { pool } from './db.js';
-import { requireAdmin } from './auth.js';
+import swaggerUi from 'swagger-ui-express';
+import { Admin, AdminActivity, Booking, connectDatabase, NewsletterSubscriber } from './db.js';
+import { openApiSpec } from './openapi.js';
+import { sendAdminBookingAlert, sendAdminWeeklyReport } from './notifications.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import { sanitizeInputs } from './middleware/sanitize.js';
+import { generalLimiter } from './middleware/rateLimiter.js';
+
+// Route imports
+import authRoutes from './routes/auth.js';
+import packageRoutes from './routes/packages.js';
+import bookingRoutes from './routes/bookings.js';
+import customerRoutes from './routes/customers.js';
+import newsletterRoutes from './routes/newsletter.js';
+import contactRoutes from './routes/contact.js';
+import reviewRoutes from './routes/reviews.js';
+import paymentRoutes from './routes/payments.js';
+import adminBookingRoutes from './routes/admin/bookings.js';
+import adminPackageRoutes from './routes/admin/packages.js';
+import adminSettingsRoutes from './routes/admin/settings.js';
+import adminSystemRoutes from './routes/admin/system.js';
+import adminNewsletterRoutes from './routes/admin/newsletter.js';
+
+if (!process.env.JWT_SECRET) throw new Error('JWT_SECRET must be configured.');
 
 const app = express();
 const port = Number(process.env.PORT || 3001);
 
-if (!process.env.DATABASE_URL || !process.env.JWT_SECRET) {
-  throw new Error('DATABASE_URL and JWT_SECRET must be configured.');
-}
-
-app.use(cors({ origin: process.env.CLIENT_ORIGIN?.split(',').map((origin) => origin.trim()) }));
+// ── Core middleware ────────────────────────────────────────────────────────────
+app.use(cors({ origin: process.env.CLIENT_ORIGIN?.split(',').map((o) => o.trim()) }));
 app.use(express.json({ limit: '20kb' }));
+app.use(sanitizeInputs);
+app.use(generalLimiter);
 
+// ── API Docs ───────────────────────────────────────────────────────────────────
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openApiSpec));
+app.get('/api-docs.json', (_req, res) => res.json(openApiSpec));
+
+// ── Health ─────────────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
 
-app.post('/api/auth/login', async (req, res, next) => {
-  try {
-    const email = String(req.body.email || '').trim().toLowerCase();
-    const password = String(req.body.password || '');
-    if (!email || !password) return res.status(400).json({ message: 'Email and password are required.' });
+// ── Public Routes ──────────────────────────────────────────────────────────────
+app.use('/api/auth', authRoutes);
+app.use('/api/packages', packageRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/customer', customerRoutes);
+app.use('/api/newsletter', newsletterRoutes);
+app.use('/api/contact', contactRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/payments', paymentRoutes);
 
-    const { rows } = await pool.query(
-      'select id, email, password_hash from admin_users where email = $1',
-      [email],
-    );
-    const admin = rows[0];
-    if (!admin || !(await bcrypt.compare(password, admin.password_hash))) {
-      return res.status(401).json({ message: 'Email or password is incorrect.' });
+// ── Admin Routes ───────────────────────────────────────────────────────────────
+app.use('/api/admin/bookings', adminBookingRoutes);
+app.use('/api/admin/packages', adminPackageRoutes);
+app.use('/api/admin/settings', adminSettingsRoutes);
+app.use('/api/admin', adminSystemRoutes);
+app.use('/api/admin/newsletter', adminNewsletterRoutes);
+
+// Admin reviews (mounted on /api to allow both /api/reviews/admin paths)
+app.use('/api/reviews', reviewRoutes);
+
+// ── Error handler ──────────────────────────────────────────────────────────────
+app.use(errorHandler);
+
+// ── Database + Server ──────────────────────────────────────────────────────────
+await connectDatabase();
+
+// Pending booking reminder — runs every 15 minutes
+const pendingReminderTimer = setInterval(async () => {
+  const configured = process.env.ADMIN_NOTIFICATION_EMAIL || process.env.ADMIN_EMAIL;
+  if (!configured || ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS', 'SMTP_FROM'].some((key) => !process.env[key])) return;
+
+  const { AdminActivity } = await import('./db.js');
+  const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const pending = await Booking.find({ status: 'pending', created_at: { $lte: cutoff }, admin_reminder_sent_at: null }).limit(50);
+
+  for (const booking of pending) {
+    try {
+      const result = await sendAdminBookingAlert(booking, { reminder: true });
+      if (result.status === 'sent') {
+        booking.admin_reminder_sent_at = new Date();
+        await booking.save();
+        await AdminActivity.create({ action: 'notification.pending_reminder', booking_reference: booking.booking_reference, booking_id: booking.id, details: 'Admin reminder email: sent' });
+      }
+    } catch (error) {
+      console.error(`Pending booking reminder failed for ${booking.booking_reference}:`, error.message);
     }
-
-    const token = jwt.sign({ sub: admin.id, email: admin.email, role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '8h' });
-    return res.json({ access_token: token, expires_in: 28800, user: { id: admin.id, email: admin.email, role: 'admin' } });
-  } catch (error) {
-    return next(error);
   }
-});
+}, 15 * 60 * 1000);
+pendingReminderTimer.unref();
 
-app.get('/api/auth/me', requireAdmin, (req, res) => {
-  res.json({ id: req.admin.sub, email: req.admin.email, role: req.admin.role });
-});
+function isoWeekKey(date) {
+  const thursday = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+  thursday.setUTCDate(thursday.getUTCDate() + 4 - (thursday.getUTCDay() || 7));
+  const firstDay = new Date(Date.UTC(thursday.getUTCFullYear(), 0, 1));
+  const week = Math.ceil((((thursday - firstDay) / 86400000) + 1) / 7);
+  return `${thursday.getUTCFullYear()}-${String(week).padStart(2, '0')}`;
+}
 
-app.post('/api/bookings', async (req, res, next) => {
-  try {
-    const {
-      trek_name, start_date, travelers, addons = [], customer_name,
-      customer_email, customer_phone, message = '', grand_total,
-      payment_method, deposit_amount,
-    } = req.body;
-    if (!trek_name || !start_date || !customer_name || !customer_email || !customer_phone
-      || !Number.isInteger(Number(travelers)) || !Array.isArray(addons)
-      || !Number.isInteger(Number(grand_total)) || !Number.isInteger(Number(deposit_amount))
-      || !['deposit', 'full'].includes(payment_method)) {
-      return res.status(400).json({ message: 'Please provide valid booking details.' });
-    }
+async function sendWeeklyReports() {
+  const now = new Date();
+  if (now.getUTCDay() !== 1 || now.getUTCHours() !== 9) return;
+  const weekKey = isoWeekKey(now);
+  const start = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const startFilter = { created_at: { $gte: start, $lt: now } };
+  const [bookings, pending, confirmed, cancelled, paid, subscribers] = await Promise.all([
+    Booking.countDocuments(startFilter),
+    Booking.countDocuments({ ...startFilter, status: 'pending' }),
+    Booking.countDocuments({ ...startFilter, status: 'confirmed' }),
+    Booking.countDocuments({ ...startFilter, status: 'cancelled' }),
+    Booking.aggregate([{ $match: startFilter }, { $group: { _id: null, amount: { $sum: '$paid_amount' } } }]),
+    NewsletterSubscriber.countDocuments({ subscribed_at: { $gte: start, $lt: now } }),
+  ]);
 
-    const { rows } = await pool.query(
-      `insert into bookings
-       (trek_name, start_date, travelers, addons, customer_name, customer_email, customer_phone, message, grand_total, payment_method, deposit_amount)
-       values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) returning id`,
-      [trek_name, start_date, Number(travelers), addons, customer_name, customer_email, customer_phone, message, Number(grand_total), payment_method, Number(deposit_amount)],
+  const admins = await Admin.find({ 'notification_preferences.weeklyReport': true }).select('_id email weekly_report_sent_week').lean();
+  for (const admin of admins) {
+    const claimed = await Admin.findOneAndUpdate(
+      { _id: admin._id, 'notification_preferences.weeklyReport': true, weekly_report_sent_week: { $ne: weekKey } },
+      { $set: { weekly_report_sent_week: weekKey } },
+      { new: true },
     );
-    return res.status(201).json({ success: true, id: rows[0].id });
-  } catch (error) {
-    return next(error);
-  }
-});
-
-app.get('/api/admin/bookings', requireAdmin, async (_req, res, next) => {
-  try {
-    const { rows } = await pool.query('select * from bookings order by created_at desc');
-    return res.json(rows);
-  } catch (error) {
-    return next(error);
-  }
-});
-
-app.patch('/api/admin/bookings/:id', requireAdmin, async (req, res, next) => {
-  try {
-    const { status } = req.body;
-    if (!['pending', 'confirmed', 'cancelled'].includes(status)) {
-      return res.status(400).json({ message: 'Unsupported booking status.' });
+    if (!claimed) continue;
+    try {
+      const result = await sendAdminWeeklyReport(admin, {
+        periodStart: start.toISOString().slice(0, 10),
+        periodEnd: now.toISOString().slice(0, 10),
+        bookings,
+        pending,
+        confirmed,
+        cancelled,
+        revenue: paid[0]?.amount || 0,
+        subscribers,
+      });
+      if (result.status !== 'sent') {
+        await Admin.updateOne({ _id: admin._id, weekly_report_sent_week: weekKey }, { $set: { weekly_report_sent_week: '' } });
+      } else {
+        await AdminActivity.create({ action: 'notification.weekly_report', details: `Weekly report sent for ${weekKey}` });
+      }
+    } catch (error) {
+      await Admin.updateOne({ _id: admin._id, weekly_report_sent_week: weekKey }, { $set: { weekly_report_sent_week: '' } });
+      console.error(`Weekly report failed for ${admin.email}:`, error.message);
     }
-    const { rows } = await pool.query(
-      'update bookings set status = $1 where id = $2 returning *',
-      [status, req.params.id],
-    );
-    if (!rows[0]) return res.status(404).json({ message: 'Booking request was not found.' });
-    return res.json(rows[0]);
-  } catch (error) {
-    return next(error);
   }
-});
+}
 
-app.use((error, _req, res, _next) => {
-  console.error(error);
-  if (error.code === '23514' || error.code === '22P02' || error.code === '22007') {
-    return res.status(400).json({ message: 'Booking details are invalid.' });
-  }
-  return res.status(500).json({ message: 'The server could not complete the request.' });
-});
+const weeklyReportTimer = setInterval(() => {
+  sendWeeklyReports().catch((error) => console.error('Weekly report job failed:', error.message));
+}, 5 * 60 * 1000);
+weeklyReportTimer.unref();
 
 app.listen(port, () => console.log(`API server listening on port ${port}`));

@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { COMPANY } from '../config/company';
 import { IMAGES } from '../config/images';
 import { useWishlist } from './WishlistContext';
+import { getCustomerSession } from '../services/customerAuth';
 import { treks } from '../data/treks';
 import { FaHeart, FaRegHeart, FaTrashAlt, FaTimes } from 'react-icons/fa';
 
@@ -22,9 +23,12 @@ export default function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+  const [customerSignedIn, setCustomerSignedIn] = useState(false);
 
   const { wishlist, toggleWishlist, clearWishlist } = useWishlist();
   const location = useLocation();
+  const solidOnThisPage = ['/booking-status', '/payment-result'].includes(location.pathname);
+  const showSolidBackground = hasScrolled || solidOnThisPage;
 
   useEffect(() => {
     const handleScroll = () => setHasScrolled(window.scrollY > 30);
@@ -43,6 +47,31 @@ export default function Navbar() {
     };
   }, [isWishlistOpen, isMobileOpen]);
 
+  useEffect(() => {
+    let active = true;
+    getCustomerSession().then((session) => {
+      if (active) setCustomerSignedIn(Boolean(session));
+    });
+    return () => { active = false; };
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!isMobileOpen) return undefined;
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setIsMobileOpen(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [isMobileOpen]);
+
+  useEffect(() => {
+    const closeOnDesktop = () => {
+      if (window.innerWidth >= 1024) setIsMobileOpen(false);
+    };
+    window.addEventListener('resize', closeOnDesktop);
+    return () => window.removeEventListener('resize', closeOnDesktop);
+  }, []);
+
   const navItems = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
@@ -54,25 +83,26 @@ export default function Navbar() {
 
   return (
     <nav
+      aria-label="Main navigation"
       style={{
-        backgroundColor: hasScrolled ? `${INK}F2` : 'transparent',
-        backdropFilter: hasScrolled ? 'blur(10px)' : 'none',
-        boxShadow: hasScrolled ? '0 4px 24px rgba(22,33,44,0.25)' : 'none',
+        backgroundColor: showSolidBackground ? `${INK}F2` : 'transparent',
+        backdropFilter: showSolidBackground ? 'blur(10px)' : 'none',
+        boxShadow: showSolidBackground ? '0 4px 24px rgba(22,33,44,0.25)' : 'none',
         fontFamily: FONT_BODY
       }}
-      className={`fixed top-0 left-0 right-0 transition-all duration-500 ease-out ${isWishlistOpen ? 'z-[9999]' : 'z-50'} ${hasScrolled ? 'py-3' : 'py-5'}`}
+      className={`fixed inset-x-0 top-0 transition-all duration-300 ease-out ${isWishlistOpen ? 'z-[9999]' : 'z-50'} ${hasScrolled ? 'py-2 sm:py-3' : 'py-3 sm:py-5'}`}
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-14 items-center justify-between gap-2 sm:h-16">
 
-          <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
+          <Link to="/" onClick={() => setIsMobileOpen(false)} className="group flex min-w-0 flex-1 items-center gap-2 sm:gap-3 lg:flex-none">
             <img
               src={IMAGES.logo}
               alt={`${COMPANY.name} Logo`}
-              className="h-9 w-9 sm:h-10 sm:w-10 rounded-lg transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3"
+              className="h-9 w-9 shrink-0 rounded-lg transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 sm:h-10 sm:w-10"
             />
             <div>
-              <span style={{ fontFamily: FONT_DISPLAY, color: PARCHMENT }} className="text-xl sm:text-2xl md:text-3xl italic font-normal tracking-tight">
+              <span style={{ fontFamily: FONT_DISPLAY, color: PARCHMENT }} className="block truncate text-lg italic font-normal tracking-tight sm:text-2xl md:text-3xl">
                 {COMPANY.shortName}
               </span>
               <p style={{ fontFamily: FONT_MONO, color: SAFFRON }} className="hidden sm:block text-[9px] -mt-1 tracking-[3px] font-medium">
@@ -81,7 +111,7 @@ export default function Navbar() {
             </div>
           </Link>
 
-          <div className="hidden md:flex items-center gap-5 lg:gap-8 xl:gap-10">
+          <div className="hidden lg:flex items-center gap-3 xl:gap-5">
             {navItems.map((item) => (
               <Link
                 key={item.name}
@@ -90,7 +120,8 @@ export default function Navbar() {
                   fontFamily: FONT_MONO,
                   color: location.pathname === item.path ? SAFFRON : `${PARCHMENT}CC`
                 }}
-                className="relative text-xs lg:text-[13px] uppercase tracking-widest whitespace-nowrap transition-all duration-300 group focus-visible:outline-none rounded-md hover:opacity-80"
+                aria-current={location.pathname === item.path ? 'page' : undefined}
+                className="relative whitespace-nowrap rounded-md text-[10px] uppercase tracking-wider transition-all duration-300 group hover:opacity-80 focus-visible:outline-none xl:text-xs xl:tracking-widest"
               >
                 {item.name}
                 {location.pathname === item.path && (
@@ -104,7 +135,7 @@ export default function Navbar() {
             ))}
 
             <button
-              onClick={() => setIsWishlistOpen(true)}
+              onClick={() => { setIsMobileOpen(false); setIsWishlistOpen(true); }}
               style={{ color: PARCHMENT }}
               className="relative p-2.5 rounded-lg transition-all duration-300 flex items-center justify-center hover:scale-105 active:scale-95 hover:opacity-80 focus-visible:outline-none"
               aria-label="Wishlist"
@@ -118,11 +149,11 @@ export default function Navbar() {
             </button>
 
             <Link
-              to="/login"
+              to={customerSignedIn ? '/account' : '/customer-login'}
               style={{ color: PARCHMENT, border: `1px solid ${PARCHMENT}44` }}
               className="px-5 lg:px-6 py-2 rounded-full font-semibold text-sm tracking-wide whitespace-nowrap hover:bg-white/10 active:scale-95 focus-visible:outline-none transition-all duration-300"
             >
-              Log In
+              {customerSignedIn ? 'My Account' : 'Sign In'}
             </Link>
 
             <Link
@@ -134,11 +165,11 @@ export default function Navbar() {
             </Link>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-4 md:hidden">
+          <div className="flex shrink-0 items-center gap-1 sm:gap-2 lg:hidden">
             <button
-              onClick={() => setIsWishlistOpen(true)}
+              onClick={() => { setIsMobileOpen(false); setIsWishlistOpen(true); }}
               style={{ color: PARCHMENT }}
-              className="relative p-2.5 rounded-lg transition-all duration-300 flex items-center justify-center active:scale-95 focus-visible:outline-none"
+              className="relative grid h-11 w-11 place-items-center rounded-lg transition-all duration-300 active:scale-95 focus-visible:outline-none"
               aria-label="Wishlist"
             >
               <FaHeart style={wishlist.length > 0 ? { color: CLAY } : {}} size={22} />
@@ -152,9 +183,12 @@ export default function Navbar() {
             <button
               onClick={() => setIsMobileOpen(!isMobileOpen)}
               style={{ color: PARCHMENT }}
-              className="p-2 rounded-lg transition-colors relative w-9 h-9 flex items-center justify-center focus-visible:outline-none"
-              aria-label="Toggle menu"
+              className="relative grid h-11 w-11 place-items-center rounded-lg transition-colors focus-visible:outline-none"
+              aria-label={isMobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMobileOpen}
+              aria-controls="mobile-navigation"
+              aria-haspopup="true"
+              type="button"
             >
               <motion.span
                 animate={{ rotate: isMobileOpen ? 45 : 0, y: isMobileOpen ? 0 : -6 }}
@@ -183,8 +217,11 @@ export default function Navbar() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-            style={{ backgroundColor: `${INK}F7`, borderTop: `1px solid ${SAFFRON}22` }}
-            className="md:hidden overflow-hidden"
+            className="lg:hidden overscroll-contain overflow-y-auto border-t border-white/10"
+            style={{ backgroundColor: `${INK}F7`, borderTopColor: `${SAFFRON}22`, maxHeight: 'calc(100dvh - 5rem)' }}
+            id="mobile-navigation"
+            role="region"
+            aria-label="Mobile navigation"
           >
             <motion.div
               initial="closed"
@@ -194,7 +231,7 @@ export default function Navbar() {
                 open: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } },
                 closed: { transition: { staggerChildren: 0.03, staggerDirection: -1 } },
               }}
-              className="px-6 py-8 flex flex-col space-y-2"
+              className="mx-auto flex max-w-xl flex-col space-y-1 px-4 py-4 sm:px-6 sm:py-6"
             >
               {navItems.map((item) => (
                 <motion.div
@@ -208,12 +245,13 @@ export default function Navbar() {
                   <Link
                     to={item.path}
                     onClick={() => setIsMobileOpen(false)}
+                    aria-current={location.pathname === item.path ? 'page' : undefined}
                     style={
                       location.pathname === item.path
                         ? { backgroundColor: `${SAFFRON}1A`, color: SAFFRON, fontWeight: 600 }
                         : { color: PARCHMENT }
                     }
-                    className="block px-6 py-4 rounded-xl text-lg font-medium transition-all active:scale-[0.98]"
+                    className="block min-h-12 rounded-xl px-4 py-3 text-base font-medium transition-colors active:scale-[0.98] sm:text-lg"
                   >
                     {item.name}
                   </Link>
@@ -228,12 +266,26 @@ export default function Navbar() {
                 transition={{ duration: 0.25 }}
               >
                 <Link
-                  to="/login"
+                  to={customerSignedIn ? '/account' : '/customer-login'}
                   onClick={() => setIsMobileOpen(false)}
                   style={{ backgroundColor: `${PARCHMENT}22`, color: PARCHMENT }}
-                  className="mt-6 mx-6 py-4 text-center rounded-xl font-semibold text-base transition-all block"
+                  className="mt-3 block min-h-12 rounded-xl px-4 py-3 text-center font-semibold transition-all sm:mt-4"
                 >
-                  Log In
+                  {customerSignedIn ? 'My Account' : 'Sign In'}
+                </Link>
+              </motion.div>
+
+              <motion.div
+                variants={{ open: { opacity: 1, x: 0 }, closed: { opacity: 0, x: -16 } }}
+                transition={{ duration: 0.25 }}
+              >
+                <Link
+                  to="/signup"
+                  onClick={() => setIsMobileOpen(false)}
+                  style={{ color: PARCHMENT }}
+                  className="block rounded-xl px-4 py-3 text-center text-sm font-medium underline underline-offset-4"
+                >
+                  Create Customer Account
                 </Link>
               </motion.div>
 
@@ -248,7 +300,7 @@ export default function Navbar() {
                   to="/contact"
                   onClick={() => setIsMobileOpen(false)}
                   style={{ backgroundColor: SAFFRON, color: INK }}
-                  className="mt-6 mx-6 py-4 text-center rounded-xl font-semibold text-base shadow-lg active:scale-[0.97] transition-all block"
+                  className="mt-2 block min-h-12 rounded-xl px-4 py-3 text-center font-semibold shadow-lg transition-all active:scale-[0.97] sm:mt-3"
                 >
                   Contact Us
                 </Link>

@@ -42,8 +42,8 @@ export default function Footer() {
                 <div className="absolute -inset-1 bg-gradient-to-br from-green-400 to-emerald-500 rounded-3xl opacity-10 blur-xl" />
               </div>
 
-              <div>
-                <h3 className="text-3xl font-bold tracking-tighter">
+              <div className="min-w-0">
+                <h3 className="text-2xl font-bold leading-tight tracking-tighter sm:text-3xl">
                   Apex <span className="text-emerald-400">Himalaya Treks</span>
                 </h3>
                 <p className="text-emerald-300 text-sm tracking-widest font-medium -mt-1">

@@ -38,7 +38,7 @@ const faqs = [
   },
   {
     question: "How do I secure my booking?",
-    answer: "We require a 20% non-refundable deposit to secure your trek reservation, permits, and guides. The remaining balance can be paid in cash or credit card upon arrival in Kathmandu before the trek begins.",
+    answer: "Submit your preferred dates and group details first. Our team will confirm availability before requesting payment. Confirmed bookings receive secure eSewa links for a 20% deposit or full payment; our team will coordinate any remaining balance.",
     category: "booking"
   },
   {

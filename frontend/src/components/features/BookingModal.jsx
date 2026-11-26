@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { submitBooking } from '../../services/api';
 import { useToast } from '../ToastContext';
-import { treks } from '../../data/treks';
+import { useTreks } from '../../hooks/useTreks';
 import { X, ChevronRight, ChevronLeft, Check, Calendar, Users, Shield, Plus, Briefcase, Home, Clock, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { getCustomerProfile, getCustomerToken } from '../../services/customerAuth';
 
 const STEPS = [
   { id: 1, label: 'Confirm Trek' },
   { id: 2, label: 'Dates & Group' },
   { id: 3, label: 'Add-ons' },
   { id: 4, label: 'Contact Info' },
-  { id: 5, label: 'Review & Pay' }
+  { id: 5, label: 'Review & Request' }
 ];
 
 const ADDONS_LIST = [
@@ -24,6 +25,7 @@ const ADDONS_LIST = [
 export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
   const { addToast } = useToast();
   const navigate = useNavigate();
+  const { treks } = useTreks();
 
   // ✅ SABAI HOOKS YAHA — early return bhanda AGADI (Rules of Hooks fix)
   const [currentStep, setCurrentStep] = useState(1);
@@ -43,7 +45,6 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
       acclimatization: false,
       gear: false
     },
-    paymentMethod: 'deposit' // 'deposit' or 'full'
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -60,6 +61,15 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
     if (isOpen) {
       setCurrentStep(1);
       setDirection(1);
+      getCustomerProfile().then((profile) => {
+        if (!profile) return;
+        setFormData((previous) => ({
+          ...previous,
+          name: previous.name || profile.name,
+          email: previous.email || profile.email,
+          phone: previous.phone || profile.phone || '',
+        }));
+      }).catch(() => {});
     }
   }, [isOpen]);
 
@@ -126,7 +136,6 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
   });
 
   const grandTotal = baseAfterDiscount + addonsTotal;
-  const depositAmount = Math.round(grandTotal * 0.20); // 20% deposit
 
   const validateStep = () => {
     if (currentStep === 1) {
@@ -137,8 +146,9 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
         addToast('Please select a preferred start date.', 'error');
         return false;
       }
-      if (numTravelers < 1 || numTravelers > 20) {
-        addToast('Travelers must be between 1 and 20.', 'error');
+      const maximumGroupSize = Number(selectedTrek?.maxGroupSize) || 20;
+      if (numTravelers < 1 || numTravelers > Math.min(maximumGroupSize, 20)) {
+        addToast(`This trek accepts 1 to ${Math.min(maximumGroupSize, 20)} travelers per booking.`, 'error');
         return false;
       }
       return true;
@@ -189,15 +199,13 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
         customerPhone: formData.phone,
         message: formData.message,
         grandTotal,
-        paymentMethod: formData.paymentMethod,
-        depositAmount
       };
 
-      await submitBooking(summaryPayload);
+      const result = await submitBooking(summaryPayload, await getCustomerToken());
       localStorage.setItem('has_booked', 'true');
       addToast('Thank you! Your booking request has been submitted successfully.', 'success');
       onClose();
-      navigate('/packages');
+      navigate('/booking-status', { state: { bookingReference: result.booking_reference } });
     } catch (error) {
       addToast(
         error.message?.includes('not configured')
@@ -231,7 +239,7 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -246,19 +254,20 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
             initial={{ opacity: 0, scale: 0.95, y: 15 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 15 }}
-            className="relative w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[92vh]"
+            className="relative z-10 flex max-h-[calc(100dvh-1rem)] w-full max-w-2xl flex-col overflow-hidden rounded-xl shadow-2xl sm:max-h-[92dvh] sm:rounded-2xl"
             style={{ backgroundColor: 'var(--color-parchment-deep)', border: '1px solid color-mix(in srgb, var(--color-juniper) 20%, transparent)' }}
           >
             {/* Header */}
-            <div className="bg-slate-950 px-6 py-4 flex justify-between items-center text-white border-b border-slate-800">
+            <div className="flex items-center justify-between gap-3 border-b border-slate-800 bg-slate-950 px-4 py-3.5 text-white sm:px-6 sm:py-4">
               <div>
-                <h2 className="text-xl font-bold text-gradient">Book Your Adventure</h2>
+                <h2 className="text-lg font-bold text-gradient sm:text-xl">Book Your Adventure</h2>
                 <p className="text-xs text-slate-400">Step {currentStep} of {STEPS.length}: {STEPS[currentStep - 1].label}</p>
               </div>
               <button
                 type="button"
                 onClick={onClose}
-                className="p-1.5 hover:bg-slate-800 rounded-full text-slate-400 hover:text-white transition-colors"
+                aria-label="Close booking form"
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-slate-300 transition-colors hover:bg-slate-800 hover:text-white"
               >
                 <X size={20} />
               </button>
@@ -299,7 +308,7 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
             </div>
 
             {/* Form Body */}
-            <div className="flex-grow overflow-y-auto p-6 sm:p-8">
+            <div className="min-h-0 flex-grow overflow-y-auto p-4 sm:p-8">
               <AnimatePresence mode="wait" custom={direction}>
                 <motion.div
                   key={currentStep}
@@ -380,7 +389,7 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
                             required
                             type="number"
                             min="1"
-                            max="20"
+                            max={Math.min(Number(selectedTrek?.maxGroupSize) || 20, 20)}
                             name="travelers"
                             value={formData.travelers}
                             onChange={handleDataChange}
@@ -580,36 +589,8 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
                         </div>
                       </div>
 
-                      {/* Payment Method Selector */}
-                      <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-slate-700">Select Deposit Type</label>
-                        <div className="grid grid-cols-2 gap-3">
-                          <button
-                            type="button"
-                            onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'deposit' }))}
-                            className={`p-3.5 rounded-xl border text-center transition-all ${
-                              formData.paymentMethod === 'deposit'
-                                ? 'bg-emerald-50 border-emerald-500 ring-2 ring-emerald-500/20'
-                                : 'bg-white border-slate-200 hover:border-slate-300'
-                            }`}
-                          >
-                            <div className="font-bold text-slate-800 text-sm">20% Booking Deposit</div>
-                            <div className="text-xs text-emerald-600 font-semibold mt-1">Rs. {depositAmount.toLocaleString()}</div>
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'full' }))}
-                            className={`p-3.5 rounded-xl border text-center transition-all ${
-                              formData.paymentMethod === 'full'
-                                ? 'bg-emerald-50 border-emerald-500 ring-2 ring-emerald-500/20'
-                                : 'bg-white border-slate-200 hover:border-slate-300'
-                            }`}
-                          >
-                            <div className="font-bold text-slate-800 text-sm">Pay In Full</div>
-                            <div className="text-xs text-emerald-600 font-semibold mt-1">Rs. {grandTotal.toLocaleString()}</div>
-                          </button>
-                        </div>
+                      <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-4 text-sm leading-6 text-emerald-950">
+                        No payment is taken with this request. Our team will review your dates and availability first. If confirmed, we will email secure eSewa links so you can choose a 20% deposit or full payment.
                       </div>
                     </div>
                   )}
@@ -618,12 +599,12 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
             </div>
 
             {/* Footer Navigation */}
-            <div className="px-6 py-4 border-t flex items-center justify-between shrink-0" style={{ backgroundColor: 'var(--color-parchment)', borderColor: 'color-mix(in srgb, var(--color-juniper) 15%, transparent)' }}>
+            <div className="flex shrink-0 items-center justify-between gap-3 border-t px-3 py-3 sm:px-6 sm:py-4" style={{ backgroundColor: 'var(--color-parchment)', borderColor: 'color-mix(in srgb, var(--color-juniper) 15%, transparent)' }}>
               <button
                 type="button"
                 onClick={goToPrev}
                 disabled={currentStep === 1 || isSubmitting}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-semibold"
+                className="flex min-h-11 items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-50 sm:px-4"
                 style={{ color: 'var(--color-juniper)' }}
               >
                 <ChevronLeft size={16} /> Back
@@ -633,7 +614,7 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
                 <button
                   type="button"
                   onClick={goToNext}
-                  className="base-form-btn !py-2.5 !px-5"
+                  className="base-form-btn min-h-11 !px-4 !py-2.5 sm:!px-5"
                 >
                   Continue <ChevronRight size={16} />
                 </button>
@@ -642,7 +623,7 @@ export default function BookingModal({ trek: initialTrek, isOpen, onClose }) {
                   type="button"
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className="base-form-btn !py-2.5 !px-6 min-w-[140px]"
+                  className="base-form-btn min-h-11 !px-3 !py-2.5 text-xs sm:min-w-[140px] sm:!px-6 sm:text-sm"
                 >
                   {isSubmitting ? 'Processing Booking...' : 'Confirm & Request Booking'}
                 </button>

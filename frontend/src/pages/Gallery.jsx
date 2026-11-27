@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/immutability */
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { galleryData } from '../data/galleryData';
+import { fetchGallery } from '../services/api';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import SEO from '../components/common/SEO';
 import { COMPANY } from '../config/company';
@@ -28,9 +29,18 @@ const FONT_MONO = "'JetBrains Mono', 'IBM Plex Mono', monospace";
 
 export default function Gallery() {
   const [currentFilter, setCurrentFilter] = useState('all');
+  const [galleryItems, setGalleryItems] = useState(galleryData);
   const [filteredData, setFilteredData] = useState(galleryData);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+  // Fetch gallery from API on mount, fall back to static on error
+  useEffect(() => {
+    fetchGallery().then((data) => {
+      setGalleryItems(data);
+      setFilteredData(data);
+    });
+  }, []);
 
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -51,11 +61,11 @@ export default function Gallery() {
 
   useEffect(() => {
     if (currentFilter === 'all') {
-      setFilteredData(galleryData);
+      setFilteredData(galleryItems);
     } else {
-      setFilteredData(galleryData.filter((item) => item.category === currentFilter));
+      setFilteredData(galleryItems.filter((item) => item.category === currentFilter));
     }
-  }, [currentFilter]);
+  }, [currentFilter, galleryItems]);
 
   const closeModal = useCallback(() => {
     setSelectedImageIndex(null);

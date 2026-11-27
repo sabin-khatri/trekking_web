@@ -13,28 +13,74 @@ export async function apiRequest(path, { token, ...options } = {}) {
   });
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
-    throw new Error(error.message || 'The server request failed.');
+    const requestError = new Error(error.message || 'The server request failed.');
+    requestError.status = response.status;
+    requestError.code = error.code;
+    throw requestError;
   }
   if (response.status === 204) return null;
   return response.json();
 }
 
-// Trek and gallery content is bundled with the app, so don't add fake network latency.
-export const fetchTreks = async () => treks;
+const normalizeTrek = (record) => {
+  const fallback = treks.find((trek) => trek.name.toLowerCase() === String(record.name || '').toLowerCase());
+  const difficulty = String(record.difficulty || record.category || 'Moderate').toLowerCase();
+  const durationText = String(record.duration || '');
+  const durationParts = durationText.match(/(\d+)\s*(day|week|month)?/i);
+  const durationNumber = durationParts
+    ? Number(durationParts[1]) * (/week/i.test(durationParts[2] || '') ? 7 : /month/i.test(durationParts[2] || '') ? 30 : 1)
+    : fallback?.duration || 1;
+  return {
+    ...fallback,
+    ...record,
+    id: record.slug || record.id || record._id,
+    category: difficulty === 'easy' ? 'easy' : difficulty === 'strenuous' ? 'challenging' : difficulty === 'challenging' ? 'challenging' : 'moderate',
+    location: record.region || fallback?.location || '',
+    duration: durationNumber,
+    price: Number(record.price) || 0,
+    image: record.image_url || record.image || fallback?.image || treks[0]?.image || '',
+    maxAltitude: record.max_altitude || record.maxAltitude || fallback?.maxAltitude || '',
+    maxGroupSize: Number(record.maxGroupSize) || fallback?.maxGroupSize || 12,
+    featured: record.featured ?? fallback?.featured ?? false,
+    itinerary: record.itinerary?.length ? record.itinerary : fallback?.itinerary || [],
+  };
+};
+
+export const fetchTreks = async () => {
+  try {
+    const records = await apiRequest('/packages');
+    return records.map(normalizeTrek);
+  } catch (error) {
+    if (error.status) throw error;
+    return treks.map(normalizeTrek);
+  }
+};
 
 export const fetchTrekById = async (id) => {
-  const trek = treks.find((t) => t.id === id);
-  if (!trek) throw new Error('Trek not found');
-  return trek;
+  try {
+    return normalizeTrek(await apiRequest(`/packages/${encodeURIComponent(id)}`));
+  } catch (error) {
+    if (error.status) throw error;
+    const localTrek = treks.find((trek) => trek.id === id);
+    if (localTrek) return normalizeTrek(localTrek);
+    throw error;
+  }
 };
+
+export const fetchTrekDepartures = (trek) => apiRequest(`/departures?trek=${encodeURIComponent(trek)}`);
 
 export const fetchGallery = async () => {
-  return galleryData;
+  try {
+    return await apiRequest('/gallery');
+  } catch {
+    return galleryData; // fall back to static
+  }
 };
 
-export const submitBooking = async (bookingData) => {
-  await apiRequest('/bookings', {
+export const submitBooking = async (bookingData, customerToken = '') => {
+  return apiRequest('/bookings', {
     method: 'POST',
+    token: customerToken,
     body: JSON.stringify({
       trek_name: bookingData.trekName,
       start_date: bookingData.startDate,
@@ -45,9 +91,16 @@ export const submitBooking = async (bookingData) => {
       customer_phone: bookingData.customerPhone,
       message: bookingData.message,
       grand_total: bookingData.grandTotal,
-      payment_method: bookingData.paymentMethod,
-      deposit_amount: bookingData.depositAmount,
     }),
   });
-  return { success: true };
 };
+
+export const trackBooking = (bookingReference, customerEmail) => apiRequest('/bookings/track', {
+  method: 'POST',
+  body: JSON.stringify({ booking_reference: bookingReference, customer_email: customerEmail }),
+});
+
+export const subscribeToNewsletter = (email) => apiRequest('/newsletter/subscribe', {
+  method: 'POST',
+  body: JSON.stringify({ email }),
+});

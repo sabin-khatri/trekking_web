@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import {
@@ -138,18 +138,14 @@ export default function Planner() {
 
   const [compareTrekIds, setCompareTrekIds] = useState(treks.map(t => t.id));
   const [compareMetric, setCompareMetric] = useState('altitude');
+  const activeCalcTrekId = treks.some((trek) => trek.id === calcTrekId) ? calcTrekId : treks[0].id;
+  const activePackingTrekId = treks.some((trek) => trek.id === packingTrekId) ? packingTrekId : treks[0].id;
+  const activeCompareTrekIds = compareTrekIds.filter((id) => treks.some((trek) => trek.id === id));
+  const selectedCompareTrekIds = activeCompareTrekIds.length >= 2
+    ? activeCompareTrekIds
+    : treks.slice(0, 2).map((trek) => trek.id);
 
-  useEffect(() => {
-    if (!treks.length) return;
-    if (!treks.some((trek) => trek.id === calcTrekId)) setCalcTrekId(treks[0].id);
-    if (!treks.some((trek) => trek.id === packingTrekId)) setPackingTrekId(treks[0].id);
-    setCompareTrekIds((current) => {
-      const valid = current.filter((id) => treks.some((trek) => trek.id === id));
-      return valid.length ? valid : treks.map((trek) => trek.id);
-    });
-  }, [treks, calcTrekId, packingTrekId]);
-
-  const calcTrek = treks.find(t => t.id === calcTrekId) || treks[0];
+  const calcTrek = treks.find(t => t.id === activeCalcTrekId) || treks[0];
   const calcBasePrice = calcTrek.price;
   const calcBaseTotal = calcBasePrice * calcTravelers;
   const calcDiscountPct = calcTravelers >= 6 ? 10 : (calcTravelers >= 3 ? 5 : 0);
@@ -255,7 +251,7 @@ export default function Planner() {
   };
 
   const handleToggleItem = (itemText) => {
-    const key = `packing_${packingTrekId}_${selectedSeason}`;
+    const key = `packing_${activePackingTrekId}_${selectedSeason}`;
     const current = getStoredChecked(key);
     let updated;
     if (current.includes(itemText)) {
@@ -268,10 +264,10 @@ export default function Planner() {
   };
 
   const handleDownloadChecklist = () => {
-    const trek = treks.find(t => t.id === packingTrekId) || treks[0];
-    const key = `packing_${packingTrekId}_${selectedSeason}`;
+    const trek = treks.find(t => t.id === activePackingTrekId) || treks[0];
+    const key = `packing_${activePackingTrekId}_${selectedSeason}`;
     const checked = getStoredChecked(key);
-    const categories = getPackingItems(packingTrekId, selectedSeason, treks);
+    const categories = getPackingItems(activePackingTrekId, selectedSeason, treks);
 
     let txt = `==========================================\n`;
     txt += `🏔️ APEX HIMALAYA TREKS - PACKING LIST\n`;
@@ -304,17 +300,17 @@ export default function Planner() {
   };
 
   const handleToggleCompareTrek = (id) => {
-    if (compareTrekIds.includes(id)) {
-      if (compareTrekIds.length > 2) {
-        setCompareTrekIds(prev => prev.filter(t => t !== id));
+    if (selectedCompareTrekIds.includes(id)) {
+      if (selectedCompareTrekIds.length > 2) {
+        setCompareTrekIds(selectedCompareTrekIds.filter((trekId) => trekId !== id));
       }
     } else {
-      setCompareTrekIds(prev => [...prev, id]);
+      setCompareTrekIds([...selectedCompareTrekIds, id]);
     }
   };
 
   const chartData = treks
-    .filter(t => compareTrekIds.includes(t.id))
+    .filter(t => selectedCompareTrekIds.includes(t.id))
     .map(t => {
       const altNum = parseInt(t.maxAltitude.replace(/,/g, ''), 10) || 0;
       return {
@@ -333,7 +329,7 @@ export default function Planner() {
     const isBookerUnlocked = localStorage.getItem('has_booked') === 'true';
     const isCalculatorUnlocked = localStorage.getItem('has_calculated') === 'true';
 
-    const activeChecklistKey = `packing_${packingTrekId}_${selectedSeason}`;
+    const activeChecklistKey = `packing_${activePackingTrekId}_${selectedSeason}`;
     const activeCheckedCount = getStoredChecked(activeChecklistKey).length;
     const isScholarUnlocked = activeCheckedCount >= 5;
 
@@ -840,7 +836,7 @@ export default function Planner() {
                   <div className="space-y-2">
                     <label style={{ fontFamily: FONT_MONO, color: INK }} className="block text-xs uppercase tracking-wide font-bold">Select Trek Route</label>
                     <select
-                      value={calcTrekId}
+                      value={activeCalcTrekId}
                       onChange={(e) => setCalcTrekId(e.target.value)}
                       style={{ borderColor: `${JUNIPER}44`, color: INK, backgroundColor: PARCHMENT }}
                       className="w-full p-4 rounded-lg border outline-none font-semibold transition-all cursor-pointer"
@@ -1069,7 +1065,7 @@ export default function Planner() {
                 <div className="space-y-2">
                   <label style={{ fontFamily: FONT_MONO, color: '#8A8272' }} className="block text-xs font-bold uppercase tracking-widest">Select Route</label>
                   <select
-                    value={packingTrekId}
+                    value={activePackingTrekId}
                     onChange={(e) => setPackingTrekId(e.target.value)}
                     style={{ borderColor: `${JUNIPER}44`, color: INK, backgroundColor: PARCHMENT }}
                     className="w-full p-3.5 rounded-lg border font-semibold outline-none transition-all text-sm cursor-pointer"
@@ -1102,8 +1098,8 @@ export default function Planner() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8" style={{ borderTop: `1px dashed ${JUNIPER}33` }}>
-                {Object.entries(getPackingItems(packingTrekId, selectedSeason, treks)).map(([catName, items]) => {
-                  const checklistKey = `packing_${packingTrekId}_${selectedSeason}`;
+                {Object.entries(getPackingItems(activePackingTrekId, selectedSeason, treks)).map(([catName, items]) => {
+                  const checklistKey = `packing_${activePackingTrekId}_${selectedSeason}`;
                   const checkedList = getStoredChecked(checklistKey);
                   if (items.length === 0) return null;
 
@@ -1197,7 +1193,7 @@ export default function Planner() {
                 <span style={{ fontFamily: FONT_MONO, color: '#8A8272' }} className="block text-xs font-bold uppercase tracking-widest">Select Routes to Compare (Min 2)</span>
                 <div className="flex flex-wrap gap-2.5">
                   {treks.map(t => {
-                    const isChecked = compareTrekIds.includes(t.id);
+                    const isChecked = selectedCompareTrekIds.includes(t.id);
                     return (
                       <button
                         key={t.id}

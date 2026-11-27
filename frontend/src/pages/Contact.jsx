@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { useToast } from '../components/ToastContext';
 import { IMAGES } from '../config/images';
 import { COMPANY } from '../config/company';
+import { apiRequest } from '../services/api';
 
 import {
   FaEnvelope,
@@ -30,22 +31,24 @@ export default function Contact() {
     message: '',
   });
   const { addToast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const heroRef = useRef(null);
+  const prefersReducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start']
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
-  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '200%']);
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ['0%', '0%'] : ['0%', '50%']);
+  const textY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ['0%', '0%'] : ['0%', '200%']);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.name || !formData.email || !formData.message) {
@@ -59,12 +62,24 @@ export default function Contact() {
       return;
     }
 
-    const subject = encodeURIComponent(formData.subject.trim() || `Website inquiry from ${formData.name.trim()}`);
-    const body = encodeURIComponent(
-      `Name: ${formData.name.trim()}\nEmail: ${formData.email.trim()}\n\n${formData.message.trim()}`,
-    );
-    window.location.href = `mailto:${COMPANY.email}?subject=${subject}&body=${body}`;
-    addToast('Your email app should open with the message ready to send.', 'info');
+    setIsSubmitting(true);
+    try {
+      await apiRequest('/contact', {
+        method: 'POST',
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          subject: formData.subject.trim(),
+          message: formData.message.trim(),
+        }),
+      });
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      addToast('Your message was sent. We will get back to you soon.', 'success');
+    } catch (error) {
+      addToast(error.message || 'Your message could not be sent. Please try again.', 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const inputStyle = {
@@ -289,12 +304,13 @@ export default function Contact() {
               <div className="text-center pt-4">
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   style={{ backgroundColor: INK, color: SAFFRON }}
                   className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-full font-semibold text-base shadow-lg transition-all hover:scale-[1.02] disabled:opacity-70 disabled:hover:scale-100"
                 >
                   <>
                     <FaPaperPlane className="mr-3 text-lg" />
-                    Open Email App
+                    {isSubmitting ? 'Sending Message…' : 'Send Message'}
                   </>
                 </button>
               </div>

@@ -12,12 +12,16 @@ import SettingsTab from '../components/admin/Settingstab';
 import PackagesTab from '../components/admin/Packagestab';
 import SystemTab from '../components/admin/Systemtab';
 import NewsletterTab from '../components/admin/Newslettertab';
+import DeparturesTab from '../components/admin/DeparturesTab';
+import OverviewTab from '../components/admin/OverviewTab';
+import HistoryTab from '../components/admin/HistoryTab';
+import ReviewsTab from '../components/admin/ReviewsTab';
 import { fetchAdminBookings, sendAdminPaymentLink, updateAdminBookingStatus } from '../services/adminBookings';
 import { signOutAdmin } from '../services/adminAuth';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('bookings');
+  const [activeTab, setActiveTab] = useState('overview');
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [bookings, setBookings] = useState([]);
@@ -91,6 +95,16 @@ export default function AdminDashboard() {
     });
   }, [bookings, bookingFilter, bookingSearch]);
 
+  const upcomingBookings = useMemo(() => bookings
+    .filter((booking) => booking.status === 'confirmed' && booking.date && new Date(booking.date) >= new Date(new Date().toDateString()))
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .slice(0, 5), [bookings]);
+
+  const openBookings = (filter) => {
+    setBookingFilter(filter);
+    setActiveTab('bookings');
+  };
+
   const exportBookings = () => {
     const fields = [
       ['Booking reference', 'reference'], ['Customer', 'name'], ['Email', 'email'], ['Phone', 'phone'],
@@ -158,21 +172,21 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleSendPaymentLink = async (booking, paymentMethod = 'deposit') => {
+  const handleSendPaymentLink = async (booking, paymentMethod = 'deposit', provider = 'esewa') => {
     setStatusError('');
     setStatusNotice('');
     setStatusPaymentUrl('');
     setStatusAction('payment-link');
     try {
-      const updated = await sendAdminPaymentLink(booking.id, paymentMethod);
+      const updated = await sendAdminPaymentLink(booking.id, paymentMethod, provider);
       setBookings((current) => current.map((item) => item.id === updated.id ? updated : item));
       setSelectedBooking(updated);
       setStatusPaymentUrl(updated.notification?.payment_url || '');
       setStatusNotice(updated.notification?.status === 'sent'
-        ? `eSewa payment link emailed to ${updated.email}.`
+        ? `${provider === 'khalti' ? 'Khalti' : 'eSewa'} payment link emailed to ${updated.email}.`
         : 'Payment link created, but email is not configured. Copy the link and call the customer with payment instructions.');
     } catch (error) {
-      setStatusError(error.message || 'Could not create an eSewa payment link.');
+      setStatusError(error.message || 'Could not create a payment link.');
     } finally {
       setStatusAction('');
     }
@@ -205,26 +219,22 @@ export default function AdminDashboard() {
         </div>
 
         {/* Main Content Area */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div className="grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)] lg:items-start">
+        <aside className="rounded-2xl border border-slate-100 bg-white p-3 shadow-sm lg:sticky lg:top-24">
+          <p className="hidden px-3 pb-2 pt-1 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400 lg:block">Workspace</p>
+          <nav aria-label="Admin dashboard sections" className="flex gap-1 overflow-x-auto lg:flex-col">
+            {[
+              ['overview', 'Overview'], ['bookings', 'Bookings'], ['departures', 'Departures'],
+              ['customers', 'Customers'], ['packages', 'Packages'], ['newsletter', 'Newsletter'],
+              ['reviews', 'Reviews'], ['history', 'Activity history'], ['system', 'System status'], ['settings', 'Settings'],
+            ].map(([tab, label]) => <button key={tab} onClick={() => setActiveTab(tab)} aria-current={activeTab === tab ? 'page' : undefined} className={`shrink-0 rounded-xl px-3 py-2.5 text-left text-sm font-semibold transition lg:w-full ${activeTab === tab ? 'bg-emerald-50 text-emerald-900' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}>{label}{tab === 'bookings' && bookings.filter((booking) => booking.status === 'pending').length > 0 && <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] text-amber-900">{bookings.filter((booking) => booking.status === 'pending').length}</span>}</button>)}
+          </nav>
+        </aside>
+        <div className="min-w-0 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm">
           {statusError && !selectedBooking && <p role="alert" className="mx-6 mt-5 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{statusError}</p>}
           {statusNotice && !selectedBooking && <p role="status" className="mx-6 mt-5 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800">{statusNotice}</p>}
 
-          {/* Tabs */}
-          <div className="border-b border-slate-100 px-4 sm:px-6 flex gap-5 overflow-x-auto">
-            {['bookings', 'customers', 'packages', 'newsletter', 'system', 'settings'].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`py-4 text-sm font-semibold capitalize border-b-2 transition-colors whitespace-nowrap ${
-                  activeTab === tab
-                    ? 'border-emerald-600 text-emerald-700'
-                    : 'border-transparent text-slate-500 hover:text-slate-700'
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
+          {activeTab === 'overview' && <OverviewTab bookings={bookings} upcomingBookings={upcomingBookings} refreshing={refreshing} onRefresh={refreshBookings} onOpenBookings={openBookings} onSelectBooking={setSelectedBooking} />}
 
           {/* Bookings Table */}
           {activeTab === 'bookings' && (
@@ -308,6 +318,7 @@ export default function AdminDashboard() {
           )}
 
           {/* Customers Tab */}
+          {activeTab === 'departures' && <DeparturesTab />}
           {activeTab === 'customers' && <CustomersTab customers={customers} onSelectCustomer={setSelectedCustomer} />}
 
           {/* Packages Tab */}
@@ -317,7 +328,10 @@ export default function AdminDashboard() {
           {activeTab === 'settings' && <SettingsTab />}
           {activeTab === 'system' && <SystemTab />}
           {activeTab === 'newsletter' && <NewsletterTab />}
+          {activeTab === 'reviews' && <ReviewsTab />}
+          {activeTab === 'history' && <HistoryTab />}
 
+        </div>
         </div>
       </div>
 

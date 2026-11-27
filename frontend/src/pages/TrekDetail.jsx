@@ -54,7 +54,7 @@ export default function TrekDetail() {
               <div className="inline-block px-3 py-1 bg-emerald-500/80 backdrop-blur-sm text-white text-sm font-semibold rounded-full mb-4 uppercase tracking-wider">
                 {trek.category}
               </div>
-              <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">{trek.name}</h1>
+              <h1 className="mb-4 text-3xl font-bold leading-tight text-white sm:text-4xl md:text-6xl">{trek.name}</h1>
               
               <div className="flex flex-wrap items-center gap-6 text-white/90">
                 <div className="flex items-center"><MapPin size={20} className="mr-2 text-emerald-400" /> {trek.location}</div>
@@ -127,11 +127,11 @@ export default function TrekDetail() {
 
           {/* Sticky Sidebar */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+            <div className="sticky top-24 rounded-2xl border border-slate-100 bg-white p-5 shadow-xl sm:p-8">
               <div className="mb-6">
                 <p className="text-slate-500 font-medium mb-1">Starting from</p>
                 <div className="flex items-baseline">
-                  <span className="text-3xl font-bold text-slate-800">Rs. {trek.price.toLocaleString()}</span>
+                  <span className="text-2xl font-bold text-slate-800 sm:text-3xl">Rs. {trek.price.toLocaleString()}</span>
                   <span className="text-slate-500 ml-2">/ person</span>
                 </div>
               </div>
